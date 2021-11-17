@@ -20,10 +20,11 @@ with (gl) {
 			const s = createShader(type)
 			shaderSource(s, source)
 			compileShader(s)
-			attachShader(p, s)
+			getShaderParameter(s, COMPILE_STATUS)
+				? attachShader(p, s)
+				: console.error(getShaderInfoLog(s))
 		}
 
-	viewport(0, 0, w, h)
 	// QUAD buffer
 	bindBuffer(ARRAY_BUFFER, b)
 	bufferData(ARRAY_BUFFER, new Uint8Array([0, 0, 0, 1, 1, 0, 1, 1]), STATIC_DRAW)
@@ -37,23 +38,24 @@ with (gl) {
 	linkProgram(p)
 	useProgram(p)
 
-	U.R = getUniformLocation(p, 'R')
-	uniform2f(U.R, w, h)
+	U.M = getUniformLocation(p, 'M')
+
+	BD.move = (x, y) => {
+		uniform2f(U.M, x, y)
+	}
 
 	BD.resize = () => {
-		uniform2f(U.R, w, h)
 		viewport(0, 0, w, h)
 		canvas.width = w
 		canvas.height = h
-		BD.draw()
 	}
 
 	BD.draw = () => {
 		drawArrays(TRIANGLE_STRIP, 0, 4)
+		requestAnimationFrame(BD.draw)
 	}
 }
 
-BD.draw()
 function bench(fn) {
 	const t0 = performance.now()
 	fn()
@@ -65,11 +67,7 @@ function grid() {
 	const
 		{ ceil, random } = Math, { innerWidth: w, innerHeight: h } = window,
 		G = 12, W = ceil(w / G), H = ceil(h / G) * 2, C = W * H * 4,
-		short = _ => ceil(random() * 255),
-		fill = (n, fn) => [...Array(n)].map(fn),
-		sign = _ => random() > .5 ? 1 : -1,
-		attr = [short, random, sign],
-		grid = [...Array(C)].map((_, i) => [short(), random()])
+		grid = [...Array(C)].map(random)
 }
 
 let resizing = null
@@ -83,3 +81,9 @@ window.addEventListener('resize', () => {
 		BD.resize()
 	}, 300)
 })
+
+window.addEventListener('mousemove', ({ pageX: x, pageY: y }) => {
+	BD.move(x, window.innerHeight - y)
+})
+
+BD.draw()

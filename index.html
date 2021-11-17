@@ -17,11 +17,13 @@ void main() {
 </script>
 
 <script id="fs" type="x-shader/x-fragment">
+#define G 12.
 precision mediump float;
-uniform vec2 R;
+uniform vec2 M;
 void main() {
 	vec2 p = gl_FragCoord.xy;
-	gl_FragColor = vec4(p.y/R.y, p.x/R.x, 0, 1);
+	float r = distance(M, p) / 80.;
+	gl_FragColor = vec4(r, 1, 0, 1);
 }
 </script>
 
