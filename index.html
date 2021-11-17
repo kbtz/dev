@@ -1,1 +1,35 @@
-https://github.com/kbtz/dev
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>kͩbͤtͮz</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="main.css">
+</head>
+
+<script id="vs" type="x-shader/x-vertex">
+precision mediump float;
+attribute vec3 pos;
+void main() {
+	gl_Position = vec4(pos * 2. - 1., 1);
+}
+</script>
+
+<script id="fs" type="x-shader/x-fragment">
+precision mediump float;
+uniform vec2 R;
+void main() {
+	vec2 p = gl_FragCoord.xy;
+	gl_FragColor = vec4(p.y/R.y, p.x/R.x, 0, 1);
+}
+</script>
+
+<body>
+	<canvas id="backdrop"></canvas>
+	<header></header>
+	<main></main>
+	<script src="./backdrop.js"></script>
+</body>
+
+</html>
