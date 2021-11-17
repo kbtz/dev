@@ -1,11 +1,14 @@
 const
+	{ ceil, random } = Math,
 	sel = document.querySelector.bind(document),
 	/** @type {HTMLCanvasElement} */
 	canvas = sel('canvas#backdrop'),
 	vs = sel('script#vs').innerText,
 	fs = sel('script#fs').innerText
 
-let { innerWidth: w, innerHeight: h } = window
+let
+	{ innerWidth: w, innerHeight: h } = window,
+	G = 12, c = ceil(w / G), r = ceil((h / G) * 2)
 
 canvas.width = w
 canvas.height = h
@@ -15,7 +18,7 @@ const gl = canvas.getContext('webgl2', {
 }), U = {}, BD = {}
 
 with (gl) {
-	const p = createProgram(), b = createBuffer(),
+	const p = createProgram(), b = createBuffer(), t = createTexture(),
 		S = (type, source) => {
 			const s = createShader(type)
 			shaderSource(s, source)
@@ -32,6 +35,14 @@ with (gl) {
 	vertexAttribPointer(0, 2, UNSIGNED_BYTE, false, 0, 0)
 	bindBuffer(ARRAY_BUFFER, null)
 
+	// GRID texture
+	bindTexture(TEXTURE_2D, t)
+	texImage2D(TEXTURE_2D, 0, RGBA, c, r, 0, RGBA, UNSIGNED_BYTE, grid(c, r))
+	texParameteri(TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST);
+	texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
+	texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE);
+	texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
+
 	S(VERTEX_SHADER, vs)
 	S(FRAGMENT_SHADER, fs)
 
@@ -39,20 +50,29 @@ with (gl) {
 	useProgram(p)
 
 	U.M = getUniformLocation(p, 'M')
+	U.R = getUniformLocation(p, 'R')
+	U.T = getUniformLocation(p, 'T')
+
+	uniform1i(U.T, 0)
+	uniform4f(U.R, w, h, c, r)
+	uniform2f(U.M, w / 2, h / 2)
 
 	BD.move = (x, y) => {
-		uniform2f(U.M, x, y)
+		uniform2f(U.M, x, h - y)
 	}
 
 	BD.resize = () => {
 		viewport(0, 0, w, h)
 		canvas.width = w
 		canvas.height = h
+		c = ceil(w / G)
+		r = ceil((h / G) * 2)
+		uniform4f(U.R, w, h, c, r)
 	}
 
 	BD.draw = () => {
 		drawArrays(TRIANGLE_STRIP, 0, 4)
-		requestAnimationFrame(BD.draw)
+		// requestAnimationFrame(BD.draw)
 	}
 }
 
@@ -63,11 +83,12 @@ function bench(fn) {
 	console.debug(t1 - t0)
 }
 
-function grid() {
+function grid(c, r) {
 	const
-		{ ceil, random } = Math, { innerWidth: w, innerHeight: h } = window,
-		G = 12, W = ceil(w / G), H = ceil(h / G) * 2, C = W * H * 4,
-		grid = [...Array(C)].map(random)
+		ubyte = _ => ceil(random() * 255),
+		bytes = c * r * 4
+
+	return new Uint8Array([...Array(bytes)].map(ubyte))
 }
 
 let resizing = null
@@ -83,7 +104,7 @@ window.addEventListener('resize', () => {
 })
 
 window.addEventListener('mousemove', ({ pageX: x, pageY: y }) => {
-	BD.move(x, window.innerHeight - y)
+	BD.move(x, y)
 })
 
 BD.draw()

@@ -20,10 +20,19 @@ void main() {
 #define G 12.
 precision mediump float;
 uniform vec2 M;
+uniform vec4 R;
+uniform sampler2D T;
+
+vec4 texel(vec2 p) {
+	vec2 t = ceil(p/G);
+	t.y *= 2.;
+	return texture2D(T, t/R.zw);
+}
+
 void main() {
 	vec2 p = gl_FragCoord.xy;
 	float r = distance(M, p) / 80.;
-	gl_FragColor = vec4(r, 1, 0, 1);
+	gl_FragColor = texel(p);
 }
 </script>
 
