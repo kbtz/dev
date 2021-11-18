@@ -24,9 +24,11 @@ uniform vec4 R;
 uniform sampler2D T;
 
 vec4 texel(vec2 p) {
-	vec2 t = ceil(p/G);
-	t.y *= 2.;
-	return texture2D(T, t/R.zw);
+	if (fract(p.x/(G*2.)) > .5) p.y += G/2.;
+	vec2 t = p/G, g = fract(t);
+	t.y *= 2.; g.x /= 2.;
+	if (g.y <= .5 && g.y > g.x || g.y > 1. - g.x) t.y += 1.;
+	return texture2D(T, (t)/R.zw);
 }
 
 void main() {

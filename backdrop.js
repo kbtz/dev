@@ -40,8 +40,8 @@ with (gl) {
 	texImage2D(TEXTURE_2D, 0, RGBA, c, r, 0, RGBA, UNSIGNED_BYTE, grid(c, r))
 	texParameteri(TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST);
 	texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
-	texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE);
-	texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE);
+	texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, REPEAT);
+	texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, REPEAT);
 
 	S(VERTEX_SHADER, vs)
 	S(FRAGMENT_SHADER, fs)
@@ -84,11 +84,16 @@ function bench(fn) {
 }
 
 function grid(c, r) {
-	const
-		ubyte = _ => ceil(random() * 255),
-		bytes = c * r * 4
+	return new Uint8Array([...cells(c * r * 4)])
+}
 
-	return new Uint8Array([...Array(bytes)].map(ubyte))
+function* cells(bytes) {
+	for (let i = 0; i <= bytes; i += 4) {
+		yield ceil(random() * 255) // brightness
+		yield ceil(random() * 255) // speed
+		yield ceil(random() * 255) // direction?
+		yield 255 // alpha
+	}
 }
 
 let resizing = null
