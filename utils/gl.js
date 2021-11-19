@@ -1,9 +1,12 @@
+// @ts-nocheck my beloved `with` pls
+
 /**
  * WebGL "minimal" boilerplate for my fragment shader 
  * @global
  * @type {GL}
  */
 function gl(canvas, opts = {}) {
+	/** @type {WebGL2} */
 	const context = canvas.getContext('webgl2', {
 		premultipliedAlpha: false, ...opts
 	})
@@ -30,17 +33,24 @@ function gl(canvas, opts = {}) {
 				compileShader(S)
 				getShaderParameter(S, COMPILE_STATUS)
 					? attachShader(P, S)
-					: console.error(getShaderInfoLog(S))
+					: error(getShaderInfoLog(S))
 			},
-			matrext(bytes, i, j) {
+			rawTexture(bytes, i, j) {
 				const T = createTexture(), data = new Uint8Array(bytes)
-				bindTexture(TEXTURE_2D, t)
+				bindTexture(TEXTURE_2D, T)
 				texImage2D(TEXTURE_2D, 0, RGBA, i, j, 0, RGBA, UNSIGNED_BYTE, data)
 				texParameteri(TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST)
 				texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST)
 				texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, REPEAT)
 				texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, REPEAT)
+				bindTexture(TEXTURE_2D, null)
 			},
+			uniforms(names) {
+				return names.map(
+					(t, n) => [getUniformLocation(P, n), t],
+					([l, t]) => (...v) => context['uniform'+t](l, ...v)
+				)
+			}
 		}
 	}
 

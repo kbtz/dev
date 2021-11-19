@@ -17,15 +17,18 @@ interface GLAPI {
 	 * @param i number of rows (texture height)
 	 * @param j number of columns (texture width)
 	 */
-	matrex(bytes: number[], i: number, j: number)
+	rawTexture(bytes: number[], i: number, j: number)
 
 	uniforms<T extends Dict<UMethod>, K extends keyof T>(map: T):
-		{ [P in K]: WebGL2RenderingContext[`uniform${T[K]}`]}
+		{ [P in K]: DropFirst<WebGL2[`uniform${T[P]}`]>}
 }
 
+type WebGL2 = WebGL2RenderingContext
 type Callback = () => void
 type Setter = (...values: number[]) => void
 type Dict<T> = Record<string, T>
+type DropFirst<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never
+
 
 type ShaderType = 'vertex' | 'fragment'
 
