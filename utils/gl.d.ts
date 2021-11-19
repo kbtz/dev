@@ -2,7 +2,7 @@
  * WebGL "minimal" boilerplate for my fragment shader 
  * @global
  */
-function gl(canvas: HTMLCanvasElement, opts?: WebGLContextAttributes): GLAPI
+type GL = (canvas: HTMLCanvasElement, opts?: WebGLContextAttributes) => GLAPI
 
 interface GLAPI {
 	/** Set a normalized quad on attribute #0, returns its draw call */
@@ -17,10 +17,17 @@ interface GLAPI {
 	 * @param i number of rows (texture height)
 	 * @param j number of columns (texture width)
 	 */
-	matrex(bytes: number[], i:number, j:number)
+	matrex(bytes: number[], i: number, j: number)
 
+	uniforms<T extends Dict<UMethod>, K extends keyof T>(map: T):
+		{ [P in K]: WebGL2RenderingContext[`uniform${T[K]}`]}
 }
 
 type Callback = () => void
 type Setter = (...values: number[]) => void
+type Dict<T> = Record<string, T>
+
 type ShaderType = 'vertex' | 'fragment'
+
+//uniform[1234](u?i|f)v?
+type UMethod = `${'1' | '2' | '3' | '4'}${'f' | 'i' | 'ui'}${'v' | ''}`
