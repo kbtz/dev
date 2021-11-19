@@ -1,7 +1,7 @@
 // @ts-nocheck my beloved `with` pls
 
 /**
- * WebGL "minimal" boilerplate for my fragment shader 
+ * WebGL "minimal" boilerplate for my pixel shaders
  * @global
  * @type {GL}
  */
@@ -13,9 +13,15 @@ function gl(canvas, opts = {}) {
 
 	let api
 
-	with(context) {
+	const parse = input => input
+		.split('///').map(source => ({
+			source, type: source.match(/^\/\/ ([a-z]+) /)?.at(1)
+		}))
+		.filter(({ type }) => !!type)
+
+	with (context) {
 		const P = createProgram(),
-		STYPE = { vertex: VERTEX_SHADER, fragment: FRAGMENT_SHADER }
+			STYPE = { vertex: VERTEX_SHADER, fragment: FRAGMENT_SHADER }
 
 		api = {
 			quad() {
@@ -27,7 +33,15 @@ function gl(canvas, opts = {}) {
 				bindBuffer(ARRAY_BUFFER, null)
 				return () => drawArrays(TRIANGLE_STRIP, 0, 4)
 			},
-			shader(source, type) {
+			commit() {
+				linkProgram(P)
+				useProgram(P)
+			},
+			shaders(input) {
+				parse(input).map(this.shader)
+			},
+			shader({source, type}) {
+				assert(STYPE[type], 'Unknown shader type ' + type)
 				const S = createShader(STYPE[type])
 				shaderSource(S, source)
 				compileShader(S)
@@ -47,8 +61,8 @@ function gl(canvas, opts = {}) {
 			},
 			uniforms(names) {
 				return names.map(
-					(t, n) => [getUniformLocation(P, n), t],
-					([l, t]) => (...v) => context['uniform'+t](l, ...v)
+					(t, n) => [t, getUniformLocation(P, n)],
+					([t, l]) => (...v) => context['uniform' + t](l, ...v)
 				)
 			}
 		}

@@ -8,6 +8,13 @@ interface GLAPI {
 	/** Set a normalized quad on attribute #0, returns its draw call */
 	quad(): Callback
 
+	/**
+	 * Attach shaders from single source where each
+	 * section should have a header in the format
+	 * `///// <vertex OR fragment>`
+	*/
+	shaders(input: string)
+
 	/** Attach shader from source */
 	shader(source: string, type: ShaderType)
 
@@ -20,7 +27,7 @@ interface GLAPI {
 	rawTexture(bytes: number[], i: number, j: number)
 
 	uniforms<T extends Dict<UMethod>, K extends keyof T>(map: T):
-		{ [P in K]: DropFirst<WebGL2[`uniform${T[P]}`]>}
+		{ [P in K]: DropFirst<WebGL2[`uniform${T[P]}`]> }
 }
 
 type WebGL2 = WebGL2RenderingContext
