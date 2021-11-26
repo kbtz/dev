@@ -9,9 +9,9 @@ body {
 	height: 100vh;
 }
 
-#backdrop {
+canvas {
+	pointer-events: none;
 	position: fixed;
 	top: 0;
 	left: 0;
-	pointer-events: none;
 }

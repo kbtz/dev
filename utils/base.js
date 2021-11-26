@@ -1,22 +1,28 @@
 const sel= document.querySelector.bind(document)
 , el= document.createElement.bind(document)
-, on= (e, f, t) => t.addEventListener(e, f)
+, on= (t, e, f) => t.addEventListener(e, f)
 , { assert, error, info, log } = console
 , { assign: merge, keys, values } = Object
 , assign= t => o => merge(t, o)
+, factory= (fn, t= {}) => new Proxy(t,
+		{ get: (o,k) => o[k] === undefined
+			? (o[k] = fn(k, o))
+			: o[k] })
 , text= async (path) => (await fetch(path)).text()
 , register= assign(globalThis)
 
 register(
 { sel, el, on
-, merge, keys, values, assign
+, merge, keys, values, assign, factory
 , assert, error, info, log
 , text
 , register })
 
-merge(Object.prototype,
+Object.assign(Object.prototype,
 	{ merge(o) {
 			merge(this, o) }
+	, count() {
+			return keys(this).length }
 	, keys() {
 			return keys(this) }
 	, values() {
@@ -27,7 +33,7 @@ merge(Object.prototype,
 				for(f of fns)
 					o[k] = f(o[k], k)
 			return o }})
-
+ 
 // Array.at for Safari
 if(!Array.prototype.at)
 	Array.prototype.at = function (i) { return this[i] }

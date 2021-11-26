@@ -1,40 +1,39 @@
 function GL(canvas, opts= {}) {
-	const context = canvas.getContext
-		( 'webgl2'
-		, { premultipliedAlpha: false // allow transparency
-			, ... opts })
-	, parse = input => input
+	const CTX= canvas.getContext('webgl2', opts)
+	, P = factory(CTX.createProgram.bind(CTX))
+	, parse= input => input
 		.split('///')
-		.map(s => [s, s.match(/^\/\/ ([a-z]+)\b/)?.at(1)])
+		.map(s => [s, s.match(/^\/\/ ([a-z ]+)\b/)?.at(1)])
 		.filter(([,t]) => !!t)
+		.map(([s, t]) => [s, ... t.split(' ')])
 	
 	let api, common= '\n'
 	
-	with(context) {
-		const P = createProgram()
-		
+	with(CTX) {
 		api =
 		{ quad(){
-				const B = createBuffer()
-				, Q = new Uint8Array([0, 0, 0, 1, 1, 0, 1, 1])
+				const B= createBuffer()
+				, Q= new Uint8Array([0, 0, 0, 1, 1, 0, 1, 1])
 				bindBuffer(ARRAY_BUFFER, B)
 				bufferData(ARRAY_BUFFER, Q, STATIC_DRAW)
 				enableVertexAttribArray(0)
 				vertexAttribPointer(0, 2, UNSIGNED_BYTE, false, 0, 0)
 				bindBuffer(ARRAY_BUFFER, null)
 				return ()=> drawArrays(TRIANGLE_STRIP, 0, 4) }
+		, attach(shader, program)	{
+				if(program) attachShader(P[program], shader)
+				else if(P.count()) P.map(p => attachShader(p, shader))
+				else this.attach(shader, 'main') }
 		, shaders(input){
-				parse(input).map(this.shader) }
-		, shader([source, type]){
+				parse(input).map(this.shader.bind(this)) }
+		, shader([source, type, program]){
 				if(type == 'common') {
-					common = source + '\n'
-					return }
-				assert(GL.ST[type], 'Unknown shader type ' + type)
+					return common= source }
 				const S = createShader(GL.ST[type])
 				shaderSource(S, common + source)
 				compileShader(S)
 				getShaderParameter(S, COMPILE_STATUS)
-				? attachShader(P, S)
+				? this.attach(S, program)
 				: error(getShaderInfoLog(S)) }
 		, texture(w, h, bytes){
 				const T = createTexture()
@@ -47,27 +46,16 @@ function GL(canvas, opts= {}) {
 				texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, REPEAT)
 				bindTexture(TEXTURE_2D, null)
 				return T }
-		, textureResize(w, h, t){
-				const T = createTexture()
-				, data = new Uint8Array(bytes)
-				bindTexture(TEXTURE_2D, T)
-				texImage2D(TEXTURE_2D, 0, RGBA, w, h, 0, RGBA, UNSIGNED_BYTE, data)
-				texParameteri(TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST)
-				texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST)
-				texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, REPEAT)
-				texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, REPEAT)
-				bindTexture(TEXTURE_2D, null)
-				return T }
-		, commit() {
-				linkProgram(P)
-				useProgram(P) }
+		, commit(program) {
+				linkProgram(P[program])
+				useProgram(P[program]) }
 		, view(w, h) {
 				viewport(0, 0, w, h) }
 		, uniforms(names) {
 				// names.merge({ R: '2f', T: '1f' } )
 				return names.map
 				( (t, n) => [t, getUniformLocation(P, n)]
-				, ([t, l]) => (... v) => context['uniform' + t](l, ... v)) }}
+				, ([t, l]) => (... v) => CTX['uniform' + t](l, ... v)) }}
 		
 		GL.ST={ vertex: VERTEX_SHADER, fragment: FRAGMENT_SHADER }
 	}
