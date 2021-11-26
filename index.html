@@ -2,17 +2,23 @@
 <html lang="en">
 
 <head>
-	<title>kͩbͤtͮz</title>
+	<title>kbtzᵈᵉᵛ</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="main.css">
+	
+	<link href="main.css" rel="stylesheet">
+	
+	<link href="utils/base.js" rel="modulepreload">
+	<link href="backdrop/shaders.glsl" rel="preload" as="fetch" crossorigin>
+	
+	<script src="utils/gl.js" defer></script>
+	<script src="main.js" type="module"></script>
 </head>
 
 <body>
 	<canvas id="backdrop"></canvas>
 	<header></header>
 	<main></main>
-	<script src="./backdrop.js"></script>
 </body>
 
 </html>
