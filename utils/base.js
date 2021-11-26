@@ -1,6 +1,7 @@
 const sel= document.querySelector.bind(document)
 , el= document.createElement.bind(document)
 , on= (t, e, f) => t.addEventListener(e, f)
+, { PI, random, floor, ceil } = Math
 , { assert, error, info, log } = console
 , { assign: merge, keys, values } = Object
 , assign= t => o => merge(t, o)
@@ -13,12 +14,13 @@ const sel= document.querySelector.bind(document)
 
 register(
 { sel, el, on
+, PI, random, floor, ceil
 , merge, keys, values, assign, factory
 , assert, error, info, log
 , text
 , register })
 
-Object.assign(Object.prototype,
+merge(Object.prototype,
 	{ merge(o) {
 			merge(this, o) }
 	, count() {
@@ -33,7 +35,7 @@ Object.assign(Object.prototype,
 				for(f of fns)
 					o[k] = f(o[k], k)
 			return o }})
- 
+
 // Array.at for Safari
 if(!Array.prototype.at)
 	Array.prototype.at = function (i) { return this[i] }

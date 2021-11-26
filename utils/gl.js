@@ -1,6 +1,6 @@
 function GL(canvas, opts= {}) {
 	const CTX= canvas.getContext('webgl2', opts)
-	, P = factory(CTX.createProgram.bind(CTX))
+	, U= {}, P= factory(CTX.createProgram.bind(CTX))
 	, parse= input => input
 		.split('///')
 		.map(s => [s, s.match(/^\/\/ ([a-z ]+)\b/)?.at(1)])
@@ -20,24 +20,37 @@ function GL(canvas, opts= {}) {
 				vertexAttribPointer(0, 2, UNSIGNED_BYTE, false, 0, 0)
 				bindBuffer(ARRAY_BUFFER, null)
 				return ()=> drawArrays(TRIANGLE_STRIP, 0, 4) }
-		, attach(shader, program)	{
+		, attach(shader, program){
 				if(program) attachShader(P[program], shader)
 				else if(P.count()) P.map(p => attachShader(p, shader))
 				else this.attach(shader, 'main') }
-		, shaders(input){
-				parse(input).map(this.shader.bind(this)) }
+		, shaders(input, uniforms= {}){
+				parse(input).map(this.shader.bind(this))
+				P.map((p, pn) => {
+					linkProgram(p)
+					if(!uniforms[pn]) return
+					U[pn]= uniforms[pn].map
+						( (t, n) => [t, getUniformLocation(p, n)]
+						, ([t, l]) => (... v) => CTX['uniform' + t](l, ... v)) })
+			}
 		, shader([source, type, program]){
-				if(type == 'common') {
-					return common= source }
-				const S = createShader(GL.ST[type])
+				if(type == 'common')
+					return common= source
+				const S= createShader(GL.ST[type])
 				shaderSource(S, common + source)
 				compileShader(S)
 				getShaderParameter(S, COMPILE_STATUS)
 				? this.attach(S, program)
 				: error(getShaderInfoLog(S)) }
-		, texture(w, h, bytes){
-				const T = createTexture()
-				, data = bytes ? new Uint8Array(bytes): null
+		, frame(w, h){
+				const T= this.texture(w, h)
+				, F= createFramebuffer()
+				bindFramebuffer(FRAMEBUFFER, F)
+				this.size(w, h) // TODO necessary?
+				framebufferTexture2D(FRAMEBUFFER, COLOR_ATTACHMENT0, TEXTURE_2D, T, 0)
+				return [F, T] }
+		, texture(w, h, data= null){
+				const T= createTexture()
 				bindTexture(TEXTURE_2D, T)
 				texImage2D(TEXTURE_2D, 0, RGBA, w, h, 0, RGBA, UNSIGNED_BYTE, data)
 				texParameteri(TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST)
@@ -45,18 +58,18 @@ function GL(canvas, opts= {}) {
 				texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, REPEAT)
 				texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, REPEAT)
 				bindTexture(TEXTURE_2D, null)
-				return T }
-		, commit(program) {
-				linkProgram(P[program])
-				useProgram(P[program]) }
-		, view(w, h) {
-				viewport(0, 0, w, h) }
-		, uniforms(names) {
-				// names.merge({ R: '2f', T: '1f' } )
-				return names.map
-				( (t, n) => [t, getUniformLocation(P, n)]
-				, ([t, l]) => (... v) => CTX['uniform' + t](l, ... v)) }}
+				return T}
+		, sample(texture, i){
+				activeTexture(TEXTURE0 + i)
+				bindTexture(TEXTURE_2D, texture)}
+		, size(w, h){
+				viewport(0, 0, w, h)}
+		, update(uniforms= {}, program= 'main'){
+				useProgram(P[program])
+				if(program == 'main')
+					bindFramebuffer(FRAMEBUFFER, null)
+				uniforms.map((v, u) => U[program][u](... v))}}
 		
-		GL.ST={ vertex: VERTEX_SHADER, fragment: FRAGMENT_SHADER }
-	}
+		GL.ST={ vertex: VERTEX_SHADER, fragment: FRAGMENT_SHADER }}
+	
 	return api }
