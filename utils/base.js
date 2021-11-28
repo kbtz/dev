@@ -1,26 +1,23 @@
 const sel= document.querySelector.bind(document)
 , el= document.createElement.bind(document)
 , on= (t, e, f) => t.addEventListener(e, f)
+, { isArray } = Array
 , { PI, random, floor, ceil } = Math
-, { assert, error, info, log } = console
-, { assign: merge, keys, values, freeze } = Object
+, { assert, error, info, warn, log } = console
+, { assign: merge, entries: all, keys, values } = Object
 , assign= t => o => merge(t, o)
-, factory= (fn, t= {}) => new Proxy(t,
-		{ get: (o,k) => o[k] === undefined
-			? (o[k] = fn(k, o))
-			: o[k] })
 , text= async (path) => (await fetch(path)).text()
-, now= ()=> (Date.now()/1000)%100000 // 32bit float
+, now= ()=> (Date.now()/1000)%100000
 , res= ()=> {
 		const { innerWidth: w, innerHeight: h }= window
 		return [w, h]}
 , register= assign(globalThis)
 
 register(
-{ sel, el, on
+{ sel, el, on, isArray
 , PI, random, floor, ceil
-, assert, error, info, log
-, merge, keys, values, assign, freeze, factory
+, assert, error, info, warn, log
+, merge, keys, values, assign, all
 , text, now, res
 , register
 	// TODO remove consts

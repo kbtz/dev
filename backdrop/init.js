@@ -1,54 +1,36 @@
 assert(!!GL, 'gl helper not found')
 
-const source= await text('/backdrop/shaders.glsl')
-, gl= GL(sel('canvas'), { premultipliedAlpha: false } )
+const S= await text('/backdrop/shaders.glsl')
+, G= GL('canvas', { premultipliedAlpha: false } )
 , U= 12, R= ()=> {
 	const [w, h] = res(), i= ceil(w/U), j= ceil(h/U)
 	return [w, h, i, j] }
 
-gl.quad()
-gl.shaders(source)
-gl.link(
-	{ main: { texA: '1i', texB: '1i' } 
-	, grid: { tex: '1i', X: '1f' } })
+G.quad()
 
 const [w,h,i,j] = R()
-, [fA, tA] = gl.frame(i, j)
-, [fB, tB] = gl.frame(i, j)
+, tA= G.tex(i, j)
+, tB= G.tex(i, j)
+, fA= G.fbo(tA)
+, fB= G.fbo(tB)
 
-gl.program('grid', fA)
-gl.uniform.grid.tex([0])
-gl.active(tB, 0)
-gl.program('grid', fB)
-gl.active(tA, 0)
+const {main, grid}= G.compile(S)
 
-gl.program('main')
-gl.uniform.main.texA([0])
-gl.uniform.main.texB([1])
-gl.size(w, h)
-gl.active(tA, 0)
-gl.active(tB, 1)
+main.T= {tA, tB} 
 
-let odd= true
+main.U.R= [w, h]
+grid.U.R= [i, j]
+G.E.width = w
+G.E.height = h
+
+G.link()
+
 setInterval(()=> {
-	gl.program('grid', odd ? fA : fB)
-	gl.uniform.grid.X([odd ? random() : random()])
-	gl.draw()
-	odd= !odd
-	
-	gl.program('main')
-	gl.draw()}
-, 100)
+	G.draw(grid, G.tick()%2 ? fA : fB)
+	G.draw(main) }
+, 1000)
 
-// TODO debounce
-//on(window, 'resize', resize)
-
-function resize() {
-	const { innerWidth: w, innerHeight: h }= window
-	canvas.width= w
-	canvas.height= h
-	gl.size(w, h) }
-
-function draw() {
-	requestAnimationFrame(draw)
-}
+// on resize
+// canvas resize
+// set program sizes
+// resize textures

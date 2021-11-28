@@ -3,33 +3,42 @@
 precision mediump float;
 
 uniform float T;
-uniform int F;
-uniform ivec2 R;
-uniform ivec2 M;
+uniform float F;
+uniform vec2  R;
 
 highp float N21(vec2 i) {
 	float r = dot(i.xy, vec2(12.9898,78.233));
 	return fract(sin(mod(r,3.14))*43758.5453);
 }
-///// fragment grid
-uniform sampler2D tex;
-uniform float X;
 
+highp vec3 N23(vec2 i) {
+	float r = N21(i);
+	vec3 ns = vec3(r*7.456, r*8.589, r*9.154);
+	return fract(ns);
+}
+///// fragment grid
 void main() {
 	vec2 p = gl_FragCoord.xy;
-	vec4 c = vec4(X, 0., 0., 1.);
-	gl_FragColor = c;
+	vec3 c = N23(p);
+	if(mod(F, 2.) == 0.)
+		c.r = 1.;
+	else
+		c.g = 1.;
+	
+	gl_FragColor = vec4(c, 1.);
 }
 ///// fragment main
-uniform sampler2D texA;
-uniform sampler2D texB;
+uniform sampler2D tA;
+uniform sampler2D tB;
 
 void main() {
-	vec2 p = gl_FragCoord.xy, o = vec2(0., 0.);
-	float r;
-	if(p.x < 150.) r = texture2D(texA, o).r;
-	else r = texture2D(texB, o).r;
-	vec4 c = vec4(r, 0., 0., 1.);
+	vec2 p = gl_FragCoord.xy/R;
+	vec4 c;
+	if(mod(F, 2.) == 0.)
+		c = texture2D(tB, p);
+	else
+		c = texture2D(tA, p);
+	
 	gl_FragColor = c;
 }
 ///// common
