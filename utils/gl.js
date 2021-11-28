@@ -50,6 +50,10 @@ function GL(ES, O) {
 		texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST)
 		texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE)
 		texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE)
+		T.R= ((W, H) => {
+			bindTexture(TEXTURE_2D, T)
+			texImage2D(TEXTURE_2D, 0, RGBA, W, H, 0, RGBA, UNSIGNED_BYTE, null)
+		})
 		return T} // TODO retex
 	, link(){
 		for(PO of values(P)){

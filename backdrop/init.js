@@ -20,17 +20,25 @@ main.T= {tA, tB}
 
 main.U.R= [w, h]
 grid.U.R= [i, j]
-G.E.width = w
-G.E.height = h
+G.E.width= w
+G.E.height= h
 
 G.link()
 
 setInterval(()=> {
 	G.draw(grid, G.tick()%2 ? fA : fB)
 	G.draw(main) }
-, 1000)
+, 3000)
 
-// on resize
-// canvas resize
-// set program sizes
-// resize textures
+// TODO debounce
+on(window, 'resize', ()=>{
+	const [w,h,i,j] = R()
+	
+	G.E.width= w
+	G.E.height= h
+	
+	main.U.R= [w, h]
+	grid.U.R= [i, j]
+	tA.R(i, j)
+	tB.R(i, j)
+})
