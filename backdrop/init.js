@@ -1,9 +1,9 @@
 assert(!!GL, 'gl helper not found')
 
-const S= await text('/backdrop/shaders.glsl')
+const C= await text('/backdrop/shaders.glsl')
 , G= GL('canvas', { premultipliedAlpha: false } )
-, U= 12, R= ()=> {
-	const [w, h] = res(), i= ceil(w/U), j= ceil(h/U)
+, S= 36, R= ()=> {
+		const [w, h] = res(), i= ceil(w/S), j= 2 * ceil(h/S)
 	return [w, h, i, j] }
 
 G.quad()
@@ -18,10 +18,10 @@ G.T.push(tA, tB)
 G.E.width= w
 G.E.height= h
 
-const {main, grid}= G.compile(S)
-main.U= { R: [w, h], texA: '0', texB: '1' } 
-grid.U= { R: [i, j], tex: '2' } 
-
+const {main, grid}= G.compile(C)
+main.U= { R: [w, h, i, j], texA: '0', texB: '1' } 
+grid.U= { R: [w, h, i, j], tex: '2' } 
+G.GU.S = S
 G.link()
 
 setInterval(()=> {
@@ -34,7 +34,7 @@ setInterval(()=> {
 	
 	G.draw(grid, fb)
 	G.draw(main) }
-, 3000)
+, 30)
 
 // TODO debounce
 on(window, 'resize', ()=>{
@@ -42,8 +42,9 @@ on(window, 'resize', ()=>{
 	
 	G.E.width= w
 	G.E.height= h
-	main.U.R= [w, h]
-	grid.U.R= [i, j]
+	main.U.R= [w, h, i, j]
+	grid.U.R= [w, h, i, j]
+	// TODO resize each before drawing to it
 	tA.R(i, j)
 	tB.R(i, j)
 })

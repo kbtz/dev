@@ -79,7 +79,7 @@ function GL(ES, O) {
 					G['uniform'+V.length+'f'](LO[K], ... V)
 					break
 				case 'string': // for integers
-					uniform1i(LO[K], V)
+					uniform1i(LO[K], +V)
 					break}}}
 	, draw(PO, F= null){
 		useProgram(PO.I)

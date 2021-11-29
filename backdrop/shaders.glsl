@@ -1,11 +1,11 @@
 ///// common
-#define S 12.
 #define O mod(F, 2.) == 1.
 precision mediump float;
 
+uniform float S;
 uniform float T;
 uniform float F;
-uniform vec2  R;
+uniform vec4  R;
 
 highp float N21(vec2 i) {
 	float r = dot(i.xy, vec2(12.9898,78.233));
@@ -20,25 +20,43 @@ highp vec3 N23(vec2 i) {
 ///// fragment grid
 uniform sampler2D tex;
 
+vec4 setup(vec2 p) {
+	return vec4(N23(p * T), 1.);
+}
+
+vec4 update(vec2 p) {
+	vec4 last = texture2D(tex, p/R.zw);
+	last.r += sin(T) * .01;
+	last.b += .001;
+	return last;
+}
+
 void main() {
-	vec2 p = gl_FragCoord.xy/R;
-	vec3 c = N23(p * F);
-	if(O) c.r = 1.;
-	else c.g = 1.;
-	
-	gl_FragColor = vec4(c, 1.);
+	vec2 p = gl_FragCoord.xy;
+	gl_FragColor = F == 1.
+		? setup(p)
+		: update(p);
 }
 ///// fragment main
 uniform sampler2D texA;
 uniform sampler2D texB;
 
+vec2 texel(vec2 p) {
+	if (fract(p.x/(S*2.)) > .5) p.y += S/2.;
+	vec2 t = p/S, g = fract(t);
+	t.y *= 2.; g.x /= 2.;
+	if (g.y <= .5 && g.y > g.x || g.y > 1. - g.x) t.y += 1.;
+	return t/R.zw;
+}
+
 void main() {
-	vec2 p = gl_FragCoord.xy/R;
-	vec4 c;
-	c = texture2D(texA, p);
+	vec2 	
+		p = gl_FragCoord.xy,
+		t = texel(p);
 	
-	if(p.x < .5 && p.y < .5)
-		c = texture2D(texB, p);
+	vec4 c;
+	c = O ? texture2D(texA, t) : texture2D(texB, t);
+	
 	gl_FragColor = c;
 }
 ///// common
