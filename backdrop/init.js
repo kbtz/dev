@@ -37,7 +37,8 @@ setInterval(()=> {
 , 30)
 
 // TODO debounce
-on(window, 'resize', ()=>{
+on(window, 'resize', debounce(resize, 300))
+function resize(){
 	const [w,h,i,j] = R()
 	
 	G.E.width= w
@@ -45,6 +46,7 @@ on(window, 'resize', ()=>{
 	main.U.R= [w, h, i, j]
 	grid.U.R= [w, h, i, j]
 	// TODO resize each before drawing to it
+	G.GU.F= 0
 	tA.R(i, j)
 	tB.R(i, j)
-})
+}

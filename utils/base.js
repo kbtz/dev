@@ -8,6 +8,9 @@ const sel= document.querySelector.bind(document)
 , assign= t => o => merge(t, o)
 , text= async (path) => (await fetch(path)).text()
 , now= ()=> (Date.now()/1000)%100000
+, debounce= (f, t) => ()=> {
+		clearInterval(f.wait)
+		f.wait= setTimeout(f, t)}
 , res= ()=> {
 		const { innerWidth: w, innerHeight: h }= window
 		return [w, h]}
@@ -18,7 +21,7 @@ register(
 , PI, random, floor, ceil
 , assert, error, info, warn, log
 , merge, keys, values, assign, all
-, text, now, res
+, text, now, debounce, res
 , register
 	// TODO remove consts
 , count: o => keys(o).length
