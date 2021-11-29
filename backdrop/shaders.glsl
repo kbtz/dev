@@ -25,10 +25,10 @@ vec4 setup(vec2 p) {
 }
 
 vec4 update(vec2 p) {
-	vec4 last = texture2D(tex, p/R.zw);
-	last.r += sin(T) * .01;
-	last.b += .001;
-	return last;
+	vec4 t = texture2D(tex, p/R.zw);
+	t.b += (t.g*2. - 1.)/300.;
+	if(t.b<0. || t.b>1.) t.g = .5+(t.g-.5)*-1.;
+	return t;
 }
 
 void main() {
@@ -41,21 +41,29 @@ void main() {
 uniform sampler2D texA;
 uniform sampler2D texB;
 
-vec2 texel(vec2 p) {
+vec4 texel(vec2 p) {
 	if (fract(p.x/(S*2.)) > .5) p.y += S/2.;
 	vec2 t = p/S, g = fract(t);
 	t.y *= 2.; g.x /= 2.;
 	if (g.y <= .5 && g.y > g.x || g.y > 1. - g.x) t.y += 1.;
-	return t/R.zw;
+	t /= R.zw;
+	return O
+		? texture2D(texA, t)
+		: texture2D(texB, t);
+}
+
+vec3 noise(float c, vec2 p) {
+	c += sin((p.x-p.y)*30.)/2.;
+	c += N21(p)/2.;
+	c /= 2.;
+	return vec3(c);
 }
 
 void main() {
-	vec2 	
-		p = gl_FragCoord.xy,
-		t = texel(p);
+	vec2 p = gl_FragCoord.xy;
+	vec4 c, t = texel(p);
 	
-	vec4 c;
-	c = O ? texture2D(texA, t) : texture2D(texB, t);
+	c = vec4(noise(t.b, p), t.a);
 	
 	gl_FragColor = c;
 }

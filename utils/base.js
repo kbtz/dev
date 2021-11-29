@@ -9,11 +9,11 @@ const sel= document.querySelector.bind(document)
 , text= async (path) => (await fetch(path)).text()
 , now= ()=> (Date.now()/1000)%100000
 , debounce= (f, t) => ()=> {
-		clearInterval(f.wait)
-		f.wait= setTimeout(f, t)}
+	clearInterval(f.wait)
+	f.wait= setTimeout(f, t)}
 , res= ()=> {
-		const { innerWidth: w, innerHeight: h }= window
-		return [w, h]}
+	const { innerWidth: w, innerHeight: h }= window
+	return [w, h]}
 , register= assign(globalThis)
 
 register(

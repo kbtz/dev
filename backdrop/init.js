@@ -2,7 +2,7 @@ assert(!!GL, 'gl helper not found')
 
 const C= await text('/backdrop/shaders.glsl')
 , G= GL('canvas', { premultipliedAlpha: false } )
-, S= 36, R= ()=> {
+, S= 24, R= ()=> {
 		const [w, h] = res(), i= ceil(w/S), j= 2 * ceil(h/S)
 	return [w, h, i, j] }
 
@@ -24,7 +24,10 @@ grid.U= { R: [w, h, i, j], tex: '2' }
 G.GU.S = S
 G.link()
 
-setInterval(()=> {
+on(window, 'resize', debounce(resize, 300))
+draw()
+
+function draw(){
 	if(G.tick()%2){
 		tB.B(2)
 		fb.T(tA)}
@@ -33,11 +36,9 @@ setInterval(()=> {
 		fb.T(tB)}
 	
 	G.draw(grid, fb)
-	G.draw(main) }
-, 30)
+	G.draw(main)
+	requestAnimationFrame(draw)}
 
-// TODO debounce
-on(window, 'resize', debounce(resize, 300))
 function resize(){
 	const [w,h,i,j] = R()
 	
