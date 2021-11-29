@@ -1,12 +1,12 @@
 function GL(ES, O) {
 	const E= sel(ES)
 	, G= E.getContext('webgl2', O)
-	, GU= { F: 0, T: 0 }, P= {} 
+	, GU= { F: 0, T: 0 }, T= [], P= {} 
 	
 	let T0= now(), CC= '\n'
 	
 	with(G) {
-	return { E
+	return { E, T, GU
 	, quad(){
 		const B= createBuffer()
 		, D= new Uint8Array([0, 0, 0, 1, 1, 0, 1, 1])
@@ -33,14 +33,15 @@ function GL(ES, O) {
 				break}
 			if(PN){
 				if(!P[PN])
-					P[PN]={ I: createProgram(), L: {}, U: {}, T: {} } 
+					P[PN]={ I: createProgram(), L: {}, U: {} } 
 				attachShader(P[PN].I, S)}
 			else values(P).map(PV => attachShader(PV.I, S))}
 		return P}
-	, fbo(T){
+	, fbo(){
 		const F= createFramebuffer()
-		bindFramebuffer(FRAMEBUFFER, F)
-		framebufferTexture2D(FRAMEBUFFER, COLOR_ATTACHMENT0, TEXTURE_2D, T, 0)
+		F.T = T => {
+			bindFramebuffer(FRAMEBUFFER, F)
+			framebufferTexture2D(FRAMEBUFFER, COLOR_ATTACHMENT0, TEXTURE_2D, T, 0)}
 		return F}
 	, tex(W, H){
 		const T= createTexture()
@@ -50,34 +51,36 @@ function GL(ES, O) {
 		texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST)
 		texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE)
 		texParameteri(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_EDGE)
+		T.B = TI  => {
+			activeTexture(TEXTURE0 + TI)
+			bindTexture(TEXTURE_2D, T)}
 		T.R= ((W, H) => {
 			bindTexture(TEXTURE_2D, T)
-			texImage2D(TEXTURE_2D, 0, RGBA, W, H, 0, RGBA, UNSIGNED_BYTE, null)
-		})
+			texImage2D(TEXTURE_2D, 0, RGBA, W, H, 0, RGBA, UNSIGNED_BYTE, null) })
 		return T} // TODO retex
 	, link(){
 		for(PO of values(P)){
 			linkProgram(PO.I)
-			
-			for(K of keys({ ... GU, ... PO.U, ... PO.T } ))
-				PO.L[K]= getUniformLocation(PO.I, K)
-			
-			useProgram(PO.I)
-			all(PO.T).map(([TN, TO], TI) => {
-				activeTexture(TEXTURE0 + TI)
-				bindTexture(TEXTURE_2D, TO)
-				uniform1i(PO.L[TN], TI) })
-		}}
+			for(K of keys({ ... GU, ... PO.U } ))
+				PO.L[K]= getUniformLocation(PO.I, K) }
+		T.map((TO, TI) => {
+			activeTexture(TEXTURE0 + TI)
+			bindTexture(TEXTURE_2D, TO)})}
 	, tick(){
 		GU.T = now() - T0
 		return ++GU.F}
 	, flush(UO, LO){
 		for([K, V] of all(UO)){
-			if(isArray(V))
-				G['uniform'+V.length+'f'](LO[K], ... V)
-			else
-				uniform1f(LO[K], V)
-		}}
+			switch(typeof V){
+				case 'number':
+					uniform1f(LO[K], V)
+					break
+				case 'object': // Array actually
+					G['uniform'+V.length+'f'](LO[K], ... V)
+					break
+				case 'string': // for integers
+					uniform1i(LO[K], V)
+					break}}}
 	, draw(PO, F= null){
 		useProgram(PO.I)
 		bindFramebuffer(FRAMEBUFFER, F)

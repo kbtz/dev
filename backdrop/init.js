@@ -9,24 +9,30 @@ const S= await text('/backdrop/shaders.glsl')
 G.quad()
 
 const [w,h,i,j] = R()
+, fb= G.fbo()
 , tA= G.tex(i, j)
 , tB= G.tex(i, j)
-, fA= G.fbo(tA)
-, fB= G.fbo(tB)
 
-const {main, grid}= G.compile(S)
+G.T.push(tA, tB)
 
-main.T= {tA, tB} 
-
-main.U.R= [w, h]
-grid.U.R= [i, j]
 G.E.width= w
 G.E.height= h
+
+const {main, grid}= G.compile(S)
+main.U= { R: [w, h], texA: '0', texB: '1' } 
+grid.U= { R: [i, j], tex: '2' } 
 
 G.link()
 
 setInterval(()=> {
-	G.draw(grid, G.tick()%2 ? fA : fB)
+	if(G.tick()%2){
+		tB.B(2)
+		fb.T(tA)}
+	else {
+		tA.B(2)
+		fb.T(tB)}
+	
+	G.draw(grid, fb)
 	G.draw(main) }
 , 3000)
 
@@ -36,7 +42,6 @@ on(window, 'resize', ()=>{
 	
 	G.E.width= w
 	G.E.height= h
-	
 	main.U.R= [w, h]
 	grid.U.R= [i, j]
 	tA.R(i, j)

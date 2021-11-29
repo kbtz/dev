@@ -1,5 +1,6 @@
 ///// common
 #define S 12.
+#define O mod(F, 2.) == 1.
 precision mediump float;
 
 uniform float T;
@@ -17,28 +18,27 @@ highp vec3 N23(vec2 i) {
 	return fract(ns);
 }
 ///// fragment grid
+uniform sampler2D tex;
+
 void main() {
-	vec2 p = gl_FragCoord.xy;
-	vec3 c = N23(p);
-	if(mod(F, 2.) == 0.)
-		c.r = 1.;
-	else
-		c.g = 1.;
+	vec2 p = gl_FragCoord.xy/R;
+	vec3 c = N23(p * F);
+	if(O) c.r = 1.;
+	else c.g = 1.;
 	
 	gl_FragColor = vec4(c, 1.);
 }
 ///// fragment main
-uniform sampler2D tA;
-uniform sampler2D tB;
+uniform sampler2D texA;
+uniform sampler2D texB;
 
 void main() {
 	vec2 p = gl_FragCoord.xy/R;
 	vec4 c;
-	if(mod(F, 2.) == 0.)
-		c = texture2D(tB, p);
-	else
-		c = texture2D(tA, p);
+	c = texture2D(texA, p);
 	
+	if(p.x < .5 && p.y < .5)
+		c = texture2D(texB, p);
 	gl_FragColor = c;
 }
 ///// common
