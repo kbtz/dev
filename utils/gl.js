@@ -1,7 +1,7 @@
 function GL(ES, O) {
 	const E= sel(ES)
 	, G= E.getContext('webgl2', O)
-	, GU= { F: 0, T: 0 }, T= [], P= {} 
+	, GU= { F: 0, T: 0, M: [0, 0] }, T= [], P= {} 
 	
 	let T0= now(), CC= '\n'
 	
@@ -57,7 +57,7 @@ function GL(ES, O) {
 		T.R= ((W, H, D= null) => {
 			bindTexture(TEXTURE_2D, T)
 			texImage2D(TEXTURE_2D, 0, RGBA, W, H, 0, RGBA, UNSIGNED_BYTE, D) })
-		return T} // TODO retex
+		return T}
 	, link(){
 		for(PO of values(P)){
 			linkProgram(PO.I)

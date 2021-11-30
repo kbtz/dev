@@ -1,12 +1,15 @@
 ///// common
+#define P gl_FragCoord.xy
+#define A vec2(1.,.5)
+#define G R.zw
 #define O mod(F, 2.) == 1.
-#define A R.z/R.w
 #define N(x) max(0.,min(1.,x))
 precision mediump float;
 
 uniform float S;
 uniform float T;
 uniform float F;
+uniform vec2  M;
 uniform vec4  R;
 
 highp float N21(vec2 i) {
@@ -43,13 +46,15 @@ vec4 update(vec2 p) {
 		t = texture2D(self, p),
 		l = texture2D(logo, fit(p));
 	
-	float step = t.g * 2. - 1.;
-	t.b += step/300.;
-	t.b += sign(step) * (l.r/150.);
+	float bstep = t.g * 2. - 1.,
+		around = max(0., 1. - length((P - M*G)*A)/10.);
+	t.b += bstep/300.;
+	t.b += sign(bstep) * around/80.;
+	t.b += sign(bstep) * (l.r/150.);
 	t.r = l.r;
 	
 	if(t.b < 0. || t.b > 1.)
-		t.g = .5+(t.g-.5)*-1.;
+		t.g = .5+((t.g-.5)*-1.);
 	return t;
 }
 

@@ -24,16 +24,22 @@ main.U= { R: [w, h, i, j], texA: '0', texB: '1' }
 grid.U= { R: [w, h, i, j], self: '2', logo: '3' } 
 
 // TODO make it smaller for mobile
-G.GU.S = S
+G.GU.S= S
 
 G.link()
-
-draw()
 
 image('/backdrop/logo.png', function(){
 	tLogo.R(this.width, this.height, this)})
 
+let pause= false
+const redraw= ()=> requestAnimationFrame(draw)
+on(window, 'blur', ()=> pause = true)
+on(window, 'focus', ()=> pause = false)
+redraw()
+
 function draw(){
+	if(pause)
+		return setTimeout(redraw, 100)
 	if(G.tick()%2){
 		tB.B(2)
 		fb.T(tA)}
@@ -43,7 +49,7 @@ function draw(){
 	
 	G.draw(grid, fb)
 	G.draw(main)
-	requestAnimationFrame(draw)}
+	redraw()}
 
 on(window, 'resize', debounce(300, ()=> {
 	const [w,h,i,j] = R()
@@ -56,3 +62,9 @@ on(window, 'resize', debounce(300, ()=> {
 	G.GU.F= 0
 	tA.R(i, j)
 	tB.R(i, j)}))
+
+on(window, 'mousemove', ({pageX: x, pageY: y}) => {
+	const [w, h]= main.U.R
+	G.GU.M= [x/w, (h-y)/h]
+})
+
