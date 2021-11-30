@@ -90,12 +90,11 @@ vec3 noise(float c, vec2 p) {
 
 void main() {
 	vec2 p = gl_FragCoord.xy;
-	vec4 c, t = texel(p);
-	
-	c = vec4(noise(t.b, p), t.a);
+	vec4 t = texel(p);
+	vec3 c = vec3(noise(t.b, p));
 	c -= t.r * .2;
 	c *= .8;
-	gl_FragColor = c;
+	gl_FragColor = vec4(c, t.a);
 }
 ///// common
 precision mediump float;
