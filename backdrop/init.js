@@ -36,6 +36,7 @@ const redraw= ()=> requestAnimationFrame(draw)
 on(window, 'blur', ()=> pause = true)
 on(window, 'focus', ()=> pause = false)
 redraw()
+backdrop.ready()
 
 function draw(){
 	if(pause)

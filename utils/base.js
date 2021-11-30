@@ -3,7 +3,7 @@ const sel= document.querySelector.bind(document)
 , on= (t, e, f) => t.addEventListener(e, f)
 , { isArray } = Array
 , { PI, random, floor, ceil } = Math
-, { assert, error, info, warn, log } = console
+, { assert, debug, error, info, warn, log } = console
 , { assign: merge, entries: all, keys, values } = Object
 , assign= t => o => merge(t, o)
 , text= async (path) => (await fetch(path)).text()
@@ -23,13 +23,17 @@ const sel= document.querySelector.bind(document)
 register(
 { sel, el, on, isArray
 , PI, random, floor, ceil
-, assert, error, info, warn, log
+, assert, debug, error, info, warn, log
 , merge, keys, values, assign, all
 , text, now, debounce, res, image
 , register
 	// TODO remove consts
 , count: o => keys(o).length
 , vmap: (o, f) => keys(o).map(k => o[k] = f(o[k], k))
+, init: async module => {
+	import(`/${module}/init.js`)
+	await new Promise(ready => register({[module]: { ready }}) )
+	debug(`[OK] ${module}`)}
 })
 
 // Array.at for Safari
