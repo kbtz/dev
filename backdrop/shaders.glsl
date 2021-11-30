@@ -2,6 +2,8 @@
 #define P gl_FragCoord.xy
 #define A vec2(1.,.5)
 #define G R.zw
+#define GH max(R.z, R.w)
+#define GL min(R.z, R.w)
 #define O mod(F, 2.) == 1.
 #define N(x) max(0.,min(1.,x))
 precision mediump float;
@@ -41,17 +43,31 @@ vec2 fit(vec2 p) {
 	return p;
 }
 
+bool inside() {
+	vec4 l = texture2D(logo, fit(M));
+	return l.r > .5;
+}
+
 vec4 update(vec2 p) {
 	vec4
 		t = texture2D(self, p),
 		l = texture2D(logo, fit(p));
 	
 	float bstep = t.g * 2. - 1.,
-		around = max(0., 1. - length((P - M*G)*A)/10.);
+		mouse = length((P - M*G)*A),	
+		around = max(0., 1. - mouse/10.);
 	t.b += bstep/300.;
-	t.b += sign(bstep) * around/80.;
+	t.b += sign(bstep) * around/50.;
 	t.b += sign(bstep) * (l.r/150.);
 	t.r = l.r;
+	
+	if(inside() && l.r > .2) {
+		t.a -= .05 * N21(P*T) * max(0., 1. - mouse/(GL/2.));
+		t.a = max(t.a, .63 + t.b/3.);
+	} else if(t.a < 1.) {
+		t.a += .002 + .002 * max(0., 1. - mouse/(GL));
+		t.a = min(t.a, 1.);
+	}
 	
 	if(t.b < 0. || t.b > 1.)
 		t.g = .5+((t.g-.5)*-1.);
@@ -59,10 +75,9 @@ vec4 update(vec2 p) {
 }
 
 void main() {
-	vec2 p = gl_FragCoord.xy;
 	gl_FragColor = F == 1.
-		? setup(p)
-		: update(p/R.zw);
+		? setup(P)
+		: update(P/G);
 }
 ///// fragment main
 uniform sampler2D texA;
@@ -75,7 +90,7 @@ vec4 texel(vec2 p) {
 	t.y *= 2.; g.x /= 2.;
 	if (g.y <= .5 && g.y > g.x || g.y > 1. - g.x)
 		t.y += 1.;
-	t /= R.zw;
+	t /= G;
 	return O
 		? texture2D(texA, t)
 		: texture2D(texB, t);
@@ -89,11 +104,12 @@ vec3 noise(float c, vec2 p) {
 }
 
 void main() {
-	vec2 p = gl_FragCoord.xy;
-	vec4 t = texel(p);
-	vec3 c = vec3(noise(t.b, p));
-	c -= t.r * .2;
-	c *= .8;
+	vec4 t = texel(P);
+	vec3 c = vec3(noise(t.b, P));
+	
+	c -= t.r * .4;
+	
+	c *= .4;
 	gl_FragColor = vec4(c, t.a);
 }
 ///// common

@@ -5,7 +5,7 @@ html, body {
 }
 
 body {
-	background-color: #333;
+	background: radial-gradient(#b74300, #000000 70%);
 	height: 100vh;
 }
 

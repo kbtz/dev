@@ -1,7 +1,7 @@
 function GL(ES, O) {
 	const E= sel(ES)
 	, G= E.getContext('webgl2', O)
-	, GU= { F: 0, T: 0, M: [0, 0] }, T= [], P= {} 
+	, GU= { F: 0, T: 0, M: [-100, -100] }, T= [], P= {} 
 	
 	let T0= now(), CC= '\n'
 	

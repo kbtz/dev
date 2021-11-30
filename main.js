@@ -1,4 +1,4 @@
 import '/utils/base.js'
 
 await init('backdrop')
-await init('menu')
+await init('intro')
