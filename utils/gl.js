@@ -54,9 +54,9 @@ function GL(ES, O) {
 		T.B = TI  => {
 			activeTexture(TEXTURE0 + TI)
 			bindTexture(TEXTURE_2D, T)}
-		T.R= ((W, H) => {
+		T.R= ((W, H, D= null) => {
 			bindTexture(TEXTURE_2D, T)
-			texImage2D(TEXTURE_2D, 0, RGBA, W, H, 0, RGBA, UNSIGNED_BYTE, null) })
+			texImage2D(TEXTURE_2D, 0, RGBA, W, H, 0, RGBA, UNSIGNED_BYTE, D) })
 		return T} // TODO retex
 	, link(){
 		for(PO of values(P)){

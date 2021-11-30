@@ -2,7 +2,7 @@ assert(!!GL, 'gl helper not found')
 
 const C= await text('/backdrop/shaders.glsl')
 , G= GL('canvas', { premultipliedAlpha: false } )
-, S= 24, R= ()=> {
+, S= 12, R= ()=> {
 		const [w, h] = res(), i= ceil(w/S), j= 2 * ceil(h/S)
 	return [w, h, i, j] }
 
@@ -12,20 +12,26 @@ const [w,h,i,j] = R()
 , fb= G.fbo()
 , tA= G.tex(i, j)
 , tB= G.tex(i, j)
+, tLogo= G.tex(1, 1)
 
-G.T.push(tA, tB)
+G.T.push(tA, tB, tB, tLogo)
 
 G.E.width= w
 G.E.height= h
 
 const {main, grid}= G.compile(C)
 main.U= { R: [w, h, i, j], texA: '0', texB: '1' } 
-grid.U= { R: [w, h, i, j], tex: '2' } 
+grid.U= { R: [w, h, i, j], self: '2', logo: '3' } 
+
+// TODO make it smaller for mobile
 G.GU.S = S
+
 G.link()
 
-on(window, 'resize', debounce(resize, 300))
 draw()
+
+image('/backdrop/logo.png', function(){
+	tLogo.R(this.width, this.height, this)})
 
 function draw(){
 	if(G.tick()%2){
@@ -39,7 +45,7 @@ function draw(){
 	G.draw(main)
 	requestAnimationFrame(draw)}
 
-function resize(){
+on(window, 'resize', debounce(300, ()=> {
 	const [w,h,i,j] = R()
 	
 	G.E.width= w
@@ -49,5 +55,4 @@ function resize(){
 	// TODO resize each before drawing to it
 	G.GU.F= 0
 	tA.R(i, j)
-	tB.R(i, j)
-}
+	tB.R(i, j)}))

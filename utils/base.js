@@ -8,12 +8,16 @@ const sel= document.querySelector.bind(document)
 , assign= t => o => merge(t, o)
 , text= async (path) => (await fetch(path)).text()
 , now= ()=> (Date.now()/1000)%100000
-, debounce= (f, t) => ()=> {
+, debounce= (t, f) => ()=> {
 	clearInterval(f.wait)
 	f.wait= setTimeout(f, t)}
 , res= ()=> {
 	const { innerWidth: w, innerHeight: h }= window
 	return [w, h]}
+, image= (p, f) => {
+	const i = new Image()
+	i.onload= f
+	i.src= p }
 , register= assign(globalThis)
 
 register(
@@ -21,7 +25,7 @@ register(
 , PI, random, floor, ceil
 , assert, error, info, warn, log
 , merge, keys, values, assign, all
-, text, now, debounce, res
+, text, now, debounce, res, image
 , register
 	// TODO remove consts
 , count: o => keys(o).length
