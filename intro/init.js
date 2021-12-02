@@ -1,2 +1,2 @@
 log('intro init')
-menu.ready()
+intro.ready()

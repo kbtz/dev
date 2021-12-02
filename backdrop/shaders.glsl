@@ -18,18 +18,12 @@ highp float N21(vec2 i) {
 	float r = dot(i.xy, vec2(12.9898,78.233));
 	return fract(sin(mod(r,3.14))*43758.5453);
 }
-
-highp vec3 N23(vec2 i) {
-	float r = N21(i);
-	vec3 ns = vec3(r*7.456, r*8.589, r*9.154);
-	return fract(ns);
-}
 ///// fragment grid
 uniform sampler2D self;
 uniform sampler2D logo;
 
 vec4 setup(vec2 p) {
-	return vec4(N23(p * F), 1.);
+	return vec4(0., N21(p * F), N21(p * T), 1.);
 }
 
 vec2 fit(vec2 p) {
@@ -59,7 +53,7 @@ vec4 update(vec2 p) {
 	t.b += bstep/300.;
 	t.b += sign(bstep) * around/50.;
 	t.b += sign(bstep) * (l.r/150.);
-	t.r = l.r;
+	t.r = min(l.r, t.r + l.r * .005);
 	
 	if(inside() && l.r > .2) {
 		t.a -= .05 * N21(P*T) * max(0., 1. - mouse/(GL/2.));
