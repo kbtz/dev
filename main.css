@@ -5,8 +5,12 @@ html, body {
 }
 
 body {
-	background: radial-gradient(#b74300, #000000 70%);
+	background: #333;
 	height: 100vh;
+}
+
+body.intro {
+	background: linear-gradient(45deg, #ff580a, transparent);
 }
 
 canvas {

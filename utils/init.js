@@ -1,5 +1,6 @@
+import './meta.js'
 const sel= document.querySelector.bind(document)
-, el= document.createElement.bind(document)
+, cel= document.createElement.bind(document)
 , on= (t, e, f) => t.addEventListener(e, f)
 , { isArray } = Array
 , { PI, random, floor, ceil } = Math
@@ -19,9 +20,8 @@ const sel= document.querySelector.bind(document)
 	i.onload= f
 	i.src= p }
 , register= assign(globalThis)
-
 register(
-{ sel, el, on, isArray
+{ sel, cel, on, isArray
 , PI, random, floor, ceil
 , assert, debug, error, info, warn, log
 , merge, keys, values, assign, all
@@ -31,9 +31,19 @@ register(
 , count: o => keys(o).length
 , vmap: (o, f) => keys(o).map(k => o[k] = f(o[k], k))
 , init: async module => {
+	register({ current: module } )
 	import(`/${module}/init.js`)
 	await new Promise(ready => register({[module]: { ready }}) )
 	debug(`[OK] ${module}`)}
+, el: (tag, attrs= {}) => {
+	const el= cel(tag)
+	keys(attrs).map(k => el.setAttribute(k, attrs[k]))
+	return el}
+, style: (href) => {
+	if(!href) href= `/${current}/style.css`
+	const link= el('link')
+	document.head.appendChild(el('link', {
+		href, rel: 'stylesheet' }))}
 })
 
 // Array.at for Safari

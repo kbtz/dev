@@ -9,10 +9,10 @@
 precision mediump float;
 
 uniform float S;
+uniform vec4  R;
 uniform float T;
 uniform float F;
 uniform vec2  M;
-uniform vec4  R;
 
 highp float N21(vec2 i) {
 	float r = dot(i.xy, vec2(12.9898,78.233));
@@ -39,7 +39,7 @@ vec2 fit(vec2 p) {
 
 bool inside() {
 	vec4 l = texture2D(logo, fit(M));
-	return l.r > .5;
+	return l.r > .2;
 }
 
 vec4 update(vec2 p) {
@@ -48,21 +48,24 @@ vec4 update(vec2 p) {
 		l = texture2D(logo, fit(p));
 	
 	float bstep = t.g * 2. - 1.,
-		mouse = length((P - M*G)*A),	
+		mouse = length((P - M*G)*A),
 		around = max(0., 1. - mouse/10.);
-	t.b += bstep/300.;
+	
+	// grid tile darken/lighten
+	t.b += bstep/200.;
 	t.b += sign(bstep) * around/50.;
-	t.b += sign(bstep) * (l.r/150.);
-	t.r = min(l.r, t.r + l.r * .005);
+	t.b += sign(bstep) * (l.r/200.);
 	
+	// logo fade in/out
+	t.r += l.r > .2 ? .005 : -.01;
+	
+	// logo hover
 	if(inside() && l.r > .2) {
-		t.a -= .05 * N21(P*T) * max(0., 1. - mouse/(GL/2.));
-		t.a = max(t.a, .63 + t.b/3.);
-	} else if(t.a < 1.) {
-		t.a += .002 + .002 * max(0., 1. - mouse/(GL));
-		t.a = min(t.a, 1.);
-	}
+		t.a -= .05 * N21(P * T) * (1. - mouse/GL);
+		t.a = max(t.a, .66 + t.b/3.);
+	} else t.a += .002 + mouse/GL/50.;
 	
+	// grid tile step flip
 	if(t.b < 0. || t.b > 1.)
 		t.g = .5+((t.g-.5)*-1.);
 	return t;
@@ -90,21 +93,25 @@ vec4 texel(vec2 p) {
 		: texture2D(texB, t);
 }
 
-vec3 noise(float c, vec2 p) {
+float noise(float c, vec2 p) {
 	c += sin((p.x-p.y)*30.)/2.;
 	c += N21(p)/2.;
 	c /= 2.;
-	return vec3(c);
+	return c;
 }
 
 void main() {
 	vec4 t = texel(P);
-	vec3 c = vec3(noise(t.b, P));
+	float c = noise(t.b, P);
 	
-	c -= t.r * .4;
+	// darken logo area
+	c -= t.r * .3;
+	c /= 2.;
 	
-	c *= .4;
-	gl_FragColor = vec4(c, t.a);
+	vec3 g = vec3(c);
+	g.b*=1.2;
+	g.r/=2.;
+	gl_FragColor = vec4(g, t.a);
 }
 ///// common
 precision mediump float;

@@ -28,15 +28,16 @@ G.GU.S= S
 
 G.link()
 
-image('/backdrop/logo.png', function(){
-	tLogo.R(this.width, this.height, this)})
 
 let pause= false
 const redraw= ()=> requestAnimationFrame(draw)
 on(window, 'blur', ()=> pause = true)
 on(window, 'focus', ()=> pause = false)
 redraw()
-backdrop.ready()
+
+image('/backdrop/logo.png', function(){
+	backdrop.ready()
+	tLogo.R(this.width, this.height, this)})
 
 function draw(){
 	if(pause)
