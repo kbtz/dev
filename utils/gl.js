@@ -1,6 +1,5 @@
-function GL(ES, O) {
-	const E= sel(ES)
-	, G= E.getContext('webgl2', O)
+function GL(E, O) {
+	const G= E.getContext('webgl2', O)
 	, GU= { F: 0, T: 0, M: [-100, -100] }, T= [], P= {} 
 	
 	let T0= now(), CC= '\n'
@@ -35,7 +34,7 @@ function GL(ES, O) {
 				if(!P[PN])
 					P[PN]={ I: createProgram(), L: {}, U: {} } 
 				attachShader(P[PN].I, S)}
-			else values(P).map(PV => attachShader(PV.I, S))}
+			else P[𝚟𝚊𝚕𝚞𝚎𝚜].map(PV => attachShader(PV.I, S))}
 		return P}
 	, fbo(){
 		const F= createFramebuffer()
@@ -59,9 +58,9 @@ function GL(ES, O) {
 			texImage2D(TEXTURE_2D, 0, RGBA, W, H, 0, RGBA, UNSIGNED_BYTE, D) })
 		return T}
 	, link(){
-		for(PO of values(P)){
+		for([,PO] of P){
 			linkProgram(PO.I)
-			for(K of keys({ ... GU, ... PO.U } ))
+			for(K of ({ ... GU, ... PO.U } )[𝚔𝚎𝚢𝚜])
 				PO.L[K]= getUniformLocation(PO.I, K) }
 		T.map((TO, TI) => {
 			activeTexture(TEXTURE0 + TI)
@@ -70,7 +69,7 @@ function GL(ES, O) {
 		GU.T = now() - T0
 		return ++GU.F}
 	, flush(UO, LO){
-		for([K, V] of all(UO)){
+		for([K, V] of UO){
 			switch(typeof V){
 				case 'number':
 					uniform1f(LO[K], V)

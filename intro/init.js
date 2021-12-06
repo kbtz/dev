@@ -1,4 +1,5 @@
-document.body.classList.add('intro')
-style()
+body.classList.add('intro')
 
-intro.ready()
+fetch.style()
+
+module.ready()

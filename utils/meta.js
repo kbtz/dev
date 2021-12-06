@@ -1,38 +1,41 @@
-const app= globalThis,
-{ prototype: proto
-, defineProperty: def
-} = Object;
-app.def = def;
-[ '𝚔' // keys
-, '𝚟' // values
-, '𝚍𝚎𝚏' // def prop
-, '𝚐𝚎𝚝' // def getter
-, '𝚜𝚎𝚝' // def getter
-].map(n => app[n]= Symbol(n))
+symbols('𝚙𝚛𝚘𝚝𝚘', '𝚔𝚎𝚢𝚜', '𝚟𝚊𝚕𝚞𝚎𝚜', '𝚝', '𝚝𝚢𝚙𝚎', '𝚊𝚍𝚍')
 
-// my.prop[𝚐𝚎𝚝].foo = ()=> random()
+Object.defineProperty(Object.prototype, 𝚙𝚛𝚘𝚝𝚘,
+	{ set(props) {
+		for(let k of Reflect.ownKeys(props))
+			Object.defineProperty(this.prototype, k, { get: props[k] } )
+		return true }
+	, get() {
+		return new Proxy(this.prototype, {
+			set(o, k, v) {
+				if(!v.set) v.configurable = true
+				Object.defineProperty(o, k, v)
+				return true }})
+	}})
 
-def(proto, 𝚍𝚎𝚏, {
-	get: function() {
-		const self= this
-		return (n, d) => def(self, n, d) }})
+Object[𝚙𝚛𝚘𝚝𝚘][𝚊𝚍𝚍]= 
+{ set(props) {
+	Object.assign(this, props)
+	return true }}
 
-def(proto, 𝚜𝚎𝚝, {
-	get() {
-		return new Proxy(this, {
-			set(obj, prop, set) {
-				def(obj, prop, { set } )
-			}
-		})
-	}
-})
+Object[𝚙𝚛𝚘𝚝𝚘] =
+{ [Symbol.iterator]: function() {
+	return function*() {
+		for(let e of Object.entries(this))
+			yield e }}
+, [𝚔𝚎𝚢𝚜]: function() { return Object.keys(this) } 
+, [𝚟𝚊𝚕𝚞𝚎𝚜]: function() { return Object.values(this) } 
+, [𝚝]: function() {
+	return this[𝚝𝚢𝚙𝚎][0] }
+, [𝚝𝚢𝚙𝚎]: function() {
+	let t= (
+		{ object: 'obj'
+		, string: 'str'
+		, number: 'num'
+		, function: 'fun'
+		, boolean: 'bit' }
+	)[typeof this]
+	if(t == 'obj' && Array.isArray(this)) t = 'vec'
+	return t }
+}
 
-def(proto, 𝚐𝚎𝚝, {
-	get() {
-		return new Proxy(this, {
-			set(obj, prop, get) {
-				def(obj, prop, { get } )
-			}
-		})
-	}
-})
