@@ -4,7 +4,7 @@ const C= await fetch.text('shaders.glsl')
 , E= body.sel('canvas')
 , G= GL(E, { premultipliedAlpha: false } )
 , S= 12, R= ()=> {
-	const [w, h] = res, i= (w/S)[𝚌𝚎𝚒𝚕], j= 2 * (h/S)[𝚌𝚎𝚒𝚕]
+	const [w, h] = 𝚛𝚎𝚜, i= (w/S)[𝚌𝚎𝚒𝚕], j= 2 * (h/S)[𝚌𝚎𝚒𝚕]
 	return [w, h, i, j] }
 
 G.quad()

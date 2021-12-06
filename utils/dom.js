@@ -6,14 +6,6 @@ register(
 , head: document.head
 , body: document.body
 })
-
-Window[𝚙𝚛𝚘𝚝𝚘]= {
-	res: function() {
-		const {innerWidth:w, innerHeight:h}= this
-		, r= [w,h]
-		r[𝚊𝚍𝚍]= {w, h} 
-		return r }}
-
 Element[𝚙𝚛𝚘𝚝𝚘]= {
 	sel: function() { return this.querySelector.bind(this) } 
 }

@@ -2,7 +2,7 @@ function GL(E, O) {
 	const G= E.getContext('webgl2', O)
 	, GU= { F: 0, T: 0, M: [-100, -100] }, T= [], P= {} 
 	
-	let T0= now(), CC= '\n'
+	let T0= 𝚗𝚘𝚠, CC= '\n'
 	
 	with(G) {
 	return { E, T, GU
@@ -66,7 +66,7 @@ function GL(E, O) {
 			activeTexture(TEXTURE0 + TI)
 			bindTexture(TEXTURE_2D, TO)})}
 	, tick(){
-		GU.T = now() - T0
+		GU.T = 𝚗𝚘𝚠 - T0
 		return ++GU.F}
 	, flush(UO, LO){
 		for([K, V] of UO){
