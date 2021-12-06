@@ -1,4 +1,4 @@
-GL || error('gl helper not found')
+GL || log.error('gl helper not found')
 
 const C= await fetch.text('shaders.glsl')
 , E= body.sel('canvas')
