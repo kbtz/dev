@@ -52,29 +52,30 @@ vec4 update(vec2 p) {
 		mouse = length((P - M*G)*A),
 		around = max(0., 1. - mouse/10.);
 	
+	bool hover = inside();
+	
 	// grid tile darken/lighten
-	t.b += bstep/200.;
-	t.b += sign(bstep) * around/50.;
-	t.b += sign(bstep) * (l.r/200.);
+	t.b += bstep/150.;
+	t.b += sign(bstep) * around/100.;
+	t.b += sign(bstep) * (l.r/400.);
+	
+	// initial fade in
+	if(T < 2.) t.a += .02;
 	
 	// logo fade in/out
-	t.r += l.r > .2 ? .003 : -.01;
-	
-	// logo hover
-	if(inside() && l.r > .2) {
-		t.a -= .05 * N21(P * T) * (1. - mouse/GL);
-		t.a = max(t.a, .66 + t.b/3.);
-	} else if(T > 10.)
-		t.a += .002 + mouse/GL/50.;
-	else
-		t.a += .04;
+	if(T > .3 && l.r > .2) {
+		if(t.r < .7 || hover)
+			t.r += length(1.-M)/50.;
+		if(t.r > .7 && !hover)
+			t.r -= length(M)/100.;
+	}
 	
 	// grid tile step flip
 	if(t.b < 0. || t.b > 1.)
 		t.g = .5+((t.g-.5)*-1.);
 	
 	if(P.x < 1. && P.y < 1.)
-		t.r = inside() ? 1. : 0.;
+		t.r = hover ? 1. : 0.;
 	
 	return t;
 }
@@ -84,6 +85,7 @@ void main() {
 		? setup(P)
 		: update(P/G);
 }
+
 ///// fragment main
 uniform sampler2D texA;
 uniform sampler2D texB;
@@ -101,29 +103,38 @@ vec4 texel(vec2 p) {
 		: texture2D(texB, t);
 }
 
-float noise(float c, vec2 p) {
-	c += sin((p.x-p.y)*30.)/2.;
-	c += N21(p)/2.;
-	c /= 2.;
+float noise(float c) {
+	float t = .8;
+	if(c > t) c += c - t;
+	else c -= t - c;
+	
+	c += sin((P.x-P.y)*30.)/2.;
+	c += N21(P)/2.;
+	c /= 2.5;
+	return c;
+}
+
+bool inside() {
+	float key = texture2D(texA, vec2(0., 0.)).r;
+	return key > .5;
+}
+
+float logo(float c, float l) {
+	if(P.x < S*2.) return c;
+	c -= l * .5;
 	return c;
 }
 
 void main() {
+	bool hover = inside();
 	vec4 t = texel(P);
-	float c = noise(t.b, P);
+	float c = logo(t.b, t.r);
+	vec3 g = vec3(noise(c));
 	
-	// darken logo area
-	if(P.x > S*2.)
-		c -= t.r * .3;
-	c /= 2.;
-	
-	vec3 g = vec3(c);
-	g.b*=1.2;
-	g.r/=2.;
 	gl_FragColor = vec4(g, t.a);
 	
 	if(P.x < 1. && P.y < 1.)
-		gl_FragColor = texture2D(texA, vec2(0., 0.));
+		gl_FragColor.r = hover ? 1. : 0.;
 }
 ///// common
 precision mediump float;
