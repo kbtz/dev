@@ -9,7 +9,6 @@ const C= await fetch.text('shaders.glsl')
 	const [w, h] = 𝚛𝚎𝚜, i= (w/S)[𝚌𝚎𝚒𝚕], j= 2 * (h/S)[𝚌𝚎𝚒𝚕]
 	return [w, h, i, j] }
 
-window.x= G
 G.quad()
 
 const [w,h,i,j] = R()
@@ -57,13 +56,13 @@ function draw(){
 	G.draw(main)
 	redraw()}
 
+let hover= false
 window[𝚘𝚗].move = ({pageX: x, pageY: y}) => {
 	const [w, h]= main.U.R
 	G.GU.M= [x/w, (h-y)/h]
-	if(G.read()[0] > 100)
-		body.classList.add('logo-hover')
-	else
-		body.classList.remove('logo-hover')
+	
+	hover= G.read()[0] > 100
+	body[𝚝𝚊𝚐]['logo-hover']= hover
 }
 
 window[𝚘𝚗].resize = debounce(300, ()=> {
