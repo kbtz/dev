@@ -1,0 +1,7 @@
+body.intro {
+	background: linear-gradient(45deg, #ff580a, transparent);
+}
+
+body.logo-hover {
+	cursor: pointer;
+}
