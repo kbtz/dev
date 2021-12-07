@@ -23,11 +23,13 @@ E.width= w
 E.height= h
 
 const {main, grid}= G.compile(C)
-main.U= { R: [w, h, i, j], texA: '0', texB: '1' } 
-grid.U= { R: [w, h, i, j], self: '2', logo: '3' } 
+main.U= { texA: '0', texB: '1' } 
+grid.U= { self: '2', logo: '3' } 
 
 // TODO make it smaller for mobile
 G.GU.S= S
+G.GU.R= [w, h, i, j]
+G.GU.C= [0,0,-10]
 
 G.link()
 
@@ -52,17 +54,23 @@ function draw(){
 		tA.B(2)
 		fb.T(tB)}
 	
-	G.draw(grid, fb)
-	G.draw(main)
+	const [w,h,i,j] = R()
+	G.draw(grid, [i,j], fb)
+	G.draw(main, [w,h])
 	redraw()}
 
 let hover= false
 window[𝚘𝚗].move = ({pageX: x, pageY: y}) => {
-	const [w, h]= main.U.R
+	const [w, h]= G.GU.R
 	G.GU.M= [x/w, (h-y)/h]
 	
-	hover= G.read()[0] > 100
+	hover= !!G.read()[0]
 	body[𝚝𝚊𝚐]['logo-hover']= hover
+}
+
+window[𝚘𝚗].click = ({pageX: x, pageY: y}) => {
+	const [w, h]= G.GU.R
+	G.GU.C= [x/w, (h-y)/h, G.GU.T]
 }
 
 window[𝚘𝚗].resize = debounce(300, ()=> {
@@ -70,10 +78,8 @@ window[𝚘𝚗].resize = debounce(300, ()=> {
 	
 	E.width= w
 	E.height= h
-	main.U.R= [w, h, i, j]
-	grid.U.R= [w, h, i, j]
-	// TODO resize each before drawing to it
+	
 	G.GU.F= 0
+	G.GU.R= [w, h, i, j]
 	tA.R(i, j)
 	tB.R(i, j) })
-

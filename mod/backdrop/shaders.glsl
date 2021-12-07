@@ -2,8 +2,6 @@
 #define P gl_FragCoord.xy
 #define A vec2(1.,.5)
 #define G R.zw
-#define GH max(R.z, R.w)
-#define GL min(R.z, R.w)
 #define O mod(F, 2.) == 1.
 #define N(x) max(0.,min(1.,x))
 precision mediump float;
@@ -13,6 +11,7 @@ uniform vec4  R;
 uniform float T;
 uniform float F;
 uniform vec2  M;
+uniform vec3  C;
 
 highp float N21(vec2 i) {
 	float r = dot(i.xy, vec2(12.9898,78.233));
@@ -38,9 +37,17 @@ vec2 fit(vec2 p) {
 	return p;
 }
 
-bool inside() {
-	vec4 l = texture2D(logo, fit(M));
+bool inside(vec2 p) {
+	vec4 l = texture2D(logo, fit(p));
 	return l.r > .2;
+}
+
+float ripple() {
+	if(inside(C.xy)) return 0.;
+	float t = (T - C.z)/.4;
+	if(t > 1.) return 0.;
+	float m = length((P - C.xy*G)*A)/10.;
+	return (abs(t-m) < .1 && N21(P) > .8) ? 1.-m : 0.;
 }
 
 vec4 update(vec2 p) {
@@ -52,22 +59,22 @@ vec4 update(vec2 p) {
 		mouse = length((P - M*G)*A),
 		around = max(0., 1. - mouse/10.);
 	
-	bool hover = inside();
-	
 	// grid tile darken/lighten
 	t.b += bstep/150.;
 	t.b += sign(bstep) * around/100.;
 	t.b += sign(bstep) * (l.r/400.);
 	
 	// initial fade in
-	if(T < 2.) t.a += .02;
+	if(T < 1.) t.a += .02;
+	else t.a = 1. - ripple();
 	
 	// logo fade in/out
+	bool hover = inside(M);
 	if(T > .3 && l.r > .2) {
-		if(t.r < .7 || hover)
-			t.r += length(1.-M)/50.;
-		if(t.r > .7 && !hover)
-			t.r -= length(M)/100.;
+		if(t.r < .8 || hover)
+			t.r += 0.015;
+		if(t.r > .8 && !hover)
+			t.r -= 0.015;
 	}
 	
 	// grid tile step flip

@@ -1,6 +1,6 @@
 setTimeout(() => {
 	body[𝚝𝚊𝚐].intro= true
-}, 3000)
+}, 1000)
 
 fetch.style()
 
