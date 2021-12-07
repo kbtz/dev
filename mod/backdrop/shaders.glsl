@@ -23,7 +23,8 @@ uniform sampler2D self;
 uniform sampler2D logo;
 
 vec4 setup(vec2 p) {
-	return vec4(0., N21(p * F), N21(p * T), 1.);
+	float alpha = T < 2. ? 0. : 1.;
+	return vec4(0., N21(p * F), N21(p * T), alpha);
 }
 
 vec2 fit(vec2 p) {
@@ -57,17 +58,24 @@ vec4 update(vec2 p) {
 	t.b += sign(bstep) * (l.r/200.);
 	
 	// logo fade in/out
-	t.r += l.r > .2 ? .005 : -.01;
+	t.r += l.r > .2 ? .003 : -.01;
 	
 	// logo hover
 	if(inside() && l.r > .2) {
 		t.a -= .05 * N21(P * T) * (1. - mouse/GL);
 		t.a = max(t.a, .66 + t.b/3.);
-	} else t.a += .002 + mouse/GL/50.;
+	} else if(T > 10.)
+		t.a += .002 + mouse/GL/50.;
+	else
+		t.a += .04;
 	
 	// grid tile step flip
 	if(t.b < 0. || t.b > 1.)
 		t.g = .5+((t.g-.5)*-1.);
+	
+	if(P.x < 1. && P.y < 1.)
+		t.r = inside() ? 1. : 0.;
+	
 	return t;
 }
 
@@ -105,13 +113,17 @@ void main() {
 	float c = noise(t.b, P);
 	
 	// darken logo area
-	c -= t.r * .3;
+	if(P.x > S*2.)
+		c -= t.r * .3;
 	c /= 2.;
 	
 	vec3 g = vec3(c);
 	g.b*=1.2;
 	g.r/=2.;
 	gl_FragColor = vec4(g, t.a);
+	
+	if(P.x < 1. && P.y < 1.)
+		gl_FragColor = texture2D(texA, vec2(0., 0.));
 }
 ///// common
 precision mediump float;

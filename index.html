@@ -5,13 +5,35 @@
 	<meta charset="UTF-8">
 	<title>kbtzᵈᵉᵛ</title>
 	<link href="/favicon.png" rel="icon" type="image/png">
-	<link href="main.css" rel="stylesheet">
 	
-	<link href="lib/init.js" rel="modulepreload">
-	<link href="mod/backdrop/shaders.glsl" rel="preload" as="fetch" crossorigin>
+	<link href="/mod/backdrop/shaders.glsl" rel="preload" as="fetch" crossorigin>
 	
-	<script src="lib/gl.js"></script>
-	<script src="main.js" type="module"></script>
+	<script src="/lib/gl.js"></script>
+	
+	<style>
+		body {
+			margin: 0;
+			height: 100vh;
+			overflow: hidden;
+			background: #356;
+		}
+		
+		canvas {
+			pointer-events: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+		}
+	</style>
+	
+	<script type="module">
+		import '/lib/init.js'
+
+		await init('backdrop')
+		await init('intro')
+	</script>
 </head>
 
 <body>

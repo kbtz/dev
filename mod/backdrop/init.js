@@ -2,11 +2,14 @@ GL || log.error('gl helper not found')
 
 const C= await fetch.text('shaders.glsl')
 , E= body.sel('canvas')
-, G= GL(E, { premultipliedAlpha: false } )
+, G= GL(E,
+	{ preserveDrawingBuffer: true
+	, premultipliedAlpha: false })
 , S= 12, R= ()=> {
 	const [w, h] = 𝚛𝚎𝚜, i= (w/S)[𝚌𝚎𝚒𝚕], j= 2 * (h/S)[𝚌𝚎𝚒𝚕]
 	return [w, h, i, j] }
 
+window.x= G
 G.quad()
 
 const [w,h,i,j] = R()
@@ -56,7 +59,12 @@ function draw(){
 
 window[𝚘𝚗].move = ({pageX: x, pageY: y}) => {
 	const [w, h]= main.U.R
-	G.GU.M= [x/w, (h-y)/h] }
+	G.GU.M= [x/w, (h-y)/h]
+	if(G.read()[0] > 100)
+		body.classList.add('logo-hover')
+	else
+		body.classList.remove('logo-hover')
+}
 
 window[𝚘𝚗].resize = debounce(300, ()=> {
 	const [w,h,i,j] = R()

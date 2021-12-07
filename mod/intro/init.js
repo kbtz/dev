@@ -1,4 +1,6 @@
-body.classList.add('intro')
+setTimeout(() => {
+	body.classList.add('intro')
+}, 3000)
 
 fetch.style()
 
