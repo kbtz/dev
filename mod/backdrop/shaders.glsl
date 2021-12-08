@@ -44,11 +44,10 @@ precision 𝚖𝚏;
 𝚍SM(a,b,c) smoothstep(a,b,c)
 
 𝚏ripple() {
-	if(inside(C.xy)) return 0.;
-	𝚏t = (T - C.z)/.3;
-	if(t > 1.) return 0.;
-	𝚏m = length((P - C.xy*G)*A)/10.;
-	return (abs(t-m) < .1 && N21(P) > .8) ? 1.-m : 0.;
+	𝚏t = (T - C.z)/.4;
+	if(t > 1.) return 1.;
+	𝚏m = length((P - C.xy*G)*A)/min(G.x, G.y);
+	return (abs(t-m) < .05 && N21(P*T) > .8) ? 1.-m : 1.;
 }
 
 𝚟update(𝚙p) {
@@ -66,14 +65,17 @@ precision 𝚖𝚏;
 	t.b += sign(bstep) * (l.r/400.);
 	
 	// initial fade in
-	if(T < 1.) t.a += .02;
-	else t.a = 1. - ripple();
+	if(T < 4.) {
+		if(pow(t.g, 2.) < T/3.) t.a += .02;
+	} else {
+		t.a *= ripple();
+	}
 	
 	// logo fade in/out
 	𝚋hover = inside(M);
-	if(T > .3 && l.r > .2) {
+	if(T > 2. && l.r > .2) {
 		if(t.r < .8 || hover)
-			t.r += 0.015;
+			t.r += 0.01 * (.2 + p.y * t.g);
 		if(t.r > .8 && !hover)
 			t.r -= 0.015;
 	}
