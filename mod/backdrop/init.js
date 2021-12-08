@@ -22,11 +22,11 @@ G.T.push(tA, tB, tB, tLogo)
 E.width= w
 E.height= h
 
-const {main, grid}= G.compile(C)
+const { main, grid }= G.compile(C)
 main.U= { texA: '0', texB: '1' } 
 grid.U= { self: '2', logo: '3' } 
 
-// TODO make it smaller for mobile
+// TODO make it smaller for mobile?
 G.GU.S= S
 G.GU.R= [w, h, i, j]
 G.GU.C= [0,0,-10]
@@ -57,7 +57,7 @@ function draw(){
 	const [w,h,i,j] = R()
 	G.draw(grid, [i,j], fb)
 	G.draw(main, [w,h])
-	redraw()}
+	redraw() }
 
 let hover= false
 window[𝚘𝚗].move = ({pageX: x, pageY: y}) => {
@@ -69,9 +69,12 @@ window[𝚘𝚗].move = ({pageX: x, pageY: y}) => {
 }
 
 window[𝚘𝚗].click = ({pageX: x, pageY: y}) => {
+	if(hover) {
+		// TODO
+		return }
+	
 	const [w, h]= G.GU.R
-	G.GU.C= [x/w, (h-y)/h, G.GU.T]
-}
+	G.GU.C= [x/w, (h-y)/h, G.GU.T] }
 
 window[𝚘𝚗].resize = debounce(300, ()=> {
 	const [w,h,i,j] = R()
