@@ -37,6 +37,7 @@ let pause= false
 window[𝚘𝚗].blur= ()=> pause = true
 window[𝚘𝚗].focus= ()=> pause = false
 
+let info= body.sel('#info')
 const redraw= ()=> requestAnimationFrame(draw)
 redraw()
 
@@ -57,6 +58,7 @@ function draw(){
 	const [w,h,i,j] = R()
 	G.draw(grid, [i,j], fb)
 	G.draw(main, [w,h])
+	info.innerText= G.GU.T.toFixed(2)
 	redraw() }
 
 let hover= false

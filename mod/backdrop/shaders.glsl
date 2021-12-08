@@ -24,7 +24,7 @@ precision 𝚖𝚏;
 
 𝚙fit(𝚙p) {
 	𝚏
-		x=R.z, y=R.w/2.,
+		x=G.x, y=G.y/2.,
 		b=max(x,y), s=min(x,y), a=s/b,
 		i0=(1.-a)/2., i1=i0+a;
 	
@@ -38,16 +38,26 @@ precision 𝚖𝚏;
 	return l.r > .2;
 }
 
-𝚍SF 50.
-𝚍ST 8.
-𝚍Y ((P.y/G.y)*2.)-1.
-𝚍SM(a,b,c) smoothstep(a,b,c)
-
 𝚏ripple() {
 	𝚏t = (T - C.z)/.4;
 	if(t > 1.) return 1.;
 	𝚏m = length((P - C.xy*G)*A)/min(G.x, G.y);
 	return (abs(t-m) < .05 && N21(P*T) > .8) ? 1.-m : 1.;
+}
+
+
+const 𝚏ct=5., co=8.;
+𝚏curtain(𝚙p, 𝚏a) {
+	if(T < co) return a;
+	𝚏 y = p.y * 2. - 1.
+	, tm=mod(T-co, ct * 4.)/ct, t=mod(tm, 2.)
+	, cd=G.x*.05, cs=G.x*.9, cdf=tm>2. ? -1. : 1.;
+	if(t>1.) t=2.-t;
+	t=1. - pow(1. - t,4.);
+	𝚏cst=cs*t, pl=(G.x-cst)/2. + cd * t * cdf * y, pr=pl+cst;
+	if(P.x>pl && P.x<pr) a-=.01;
+	else a+=.01;
+	return a;
 }
 
 𝚟update(𝚙p) {
@@ -66,8 +76,9 @@ precision 𝚖𝚏;
 	
 	// initial fade in
 	if(T < 4.) {
-		if(pow(t.g, 2.) < T/3.) t.a += .02;
+		if(t.g < T/3.) t.a += .02;
 	} else {
+		t.a = curtain(p, t.a);
 		t.a *= ripple();
 	}
 	
@@ -75,7 +86,7 @@ precision 𝚖𝚏;
 	𝚋hover = inside(M);
 	if(T > 2. && l.r > .2) {
 		if(t.r < .8 || hover)
-			t.r += 0.01 * (.2 + p.y * t.g);
+			t.r += 0.01 * (.2 + p.y);
 		if(t.r > .8 && !hover)
 			t.r -= 0.015;
 	}
