@@ -6,9 +6,8 @@
 	<title>kbtzᵈᵉᵛ</title>
 	<link href="/favicon.png" rel="icon" type="image/png">
 	
-	<link href="/mod/backdrop/shaders.glsl" rel="preload" as="fetch" crossorigin>
-	
-	<script src="/lib/gl.js"></script>
+	<link href="/backdrop/shaders.glsl" rel="preload" as="fetch" crossorigin>
+	<link href="/backdrop/logo.png" rel="preload" as="image" crossorigin>
 	
 	<style>
 		body {
@@ -16,21 +15,17 @@
 			height: 100vh;
 			overflow: hidden;
 			background: #222;
-		}
-		
-		canvas {
-			pointer-events: none;
-			position: fixed;
-			top: 0;
-			left: 0;
-		}
+		}	
 	</style>
 	
-	<script type="module">
-		import '/lib/init.js'
-
-		await init('backdrop')
-		await init('intro')
+	<script>
+		"non strict";
+		const global= window, free= {}
+		, lock= unit => global[unit] = new Promise(r => free[unit] = r)
+		, load= unit => lock(unit) && import(`/${unit}.js`)
+		, exec= (ctx, src) => { with(ctx) eval(src) }
+		
+		['base', 'wall', 'home'].map(load)
 	</script>
 </head>
 
