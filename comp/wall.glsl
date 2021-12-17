@@ -1,5 +1,5 @@
 ///// common
-precision mediump float ;
+precision mediump float;
 
 #define P gl_FragCoord.xy
 #define A vec2 (1.,.5)
@@ -28,7 +28,7 @@ vec4 setup(vec2 p) {
 }
 
 vec2 fit(vec2 p) {
-	float 
+	float
 		x=G.x, y=G.y/2.,
 		b=max(x,y), s=min(x,y), a=s/b,
 		i0=(1.-a)/2., i1=i0+a;
@@ -50,7 +50,7 @@ float ripple() {
 	return (abs(t-m) < .05 && N21(P*T) > .8) ? 1.-m : 1.;
 }
 
-const float ct=5., co=8.;
+const float ct=5., co=18.;
 float curtain(vec2 p, float a) {
 	if(T < co) return a;
 	float y = p.y * 2. - 1.

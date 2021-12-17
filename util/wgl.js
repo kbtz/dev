@@ -12,7 +12,7 @@ class Context {
 		for(const f of this.base.keys.map(k => this[k])) {
 			if(f && f[𝚃].F) this[f.name]=
 				exec(context, 'function '+f.toString()) } }
-}
+} 
 
 class WGL extends Context {
 	launched= Date.sec

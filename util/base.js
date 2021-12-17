@@ -26,6 +26,7 @@ Object.plug(
 
 Function.plug(
 { expose: ()=> window[T.name]= T
+, after: (t, ...a) => setTimeout(()=> T(...a), t*1000)
 })
 
 Array.plug( 
@@ -78,8 +79,9 @@ fetch.join(
 const page= document
 , cel= page.bond.createElement
 , {body, head}= page
+, frame= requestAnimationFrame
 
-window.join({cel , page, body, head})
+window.join({page, body, head, cel, frame})
 
 // RAW HELPERS
 window.𝙷 =
@@ -96,13 +98,12 @@ window.𝙷 =
 , event:
 	{ handle: t => (e, h) => {
 		const {wrap, alias}= 𝙷.event
-		t.addEventListener(alias(e), wrap(h)) }
-	, wrap: (h, p= []) => (e, ...r) => {
-		switch(true) {
-			case e instanceof MouseEvent:
-				p.push([e.pageX, e.pageY])
-			default: 
-				h(...p, e, ...r) } }
+		t.addEventListener(alias(e), wrap(h))
+		return true }
+	, wrap: h => (e, ...r) => {
+		if(e instanceof MouseEvent)
+			h([e.pageX, e.pageY], e, ...r)
+		else h(e, ...r) }
 	, alias: name => {
 		if('move over out enter leave up down'.words.have(name))
 			name = 'mouse' + name
