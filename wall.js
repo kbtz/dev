@@ -1,3 +1,0 @@
-await base
-
-log('world')

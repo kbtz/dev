@@ -6,9 +6,6 @@
 	<title>kbtzᵈᵉᵛ</title>
 	<link href="/favicon.png" rel="icon" type="image/png">
 	
-	<link href="/backdrop/shaders.glsl" rel="preload" as="fetch" crossorigin>
-	<link href="/backdrop/logo.png" rel="preload" as="image" crossorigin>
-	
 	<style>
 		body {
 			margin: 0;
@@ -16,22 +13,44 @@
 			overflow: hidden;
 			background: #222;
 		}	
+		
+		#wall {
+			pointer-events: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+		}
 	</style>
+	
+	<link href="/comp/wall.glsl" rel="preload" as="fetch" crossorigin>
+	<link href="/icon/logo.png" rel="preload" as="image">
 	
 	<script>
 		"non strict";
-		const global= window, free= {}
-		, lock= unit => global[unit] = new Promise(r => free[unit] = r)
-		, load= unit => lock(unit) && import(`/${unit}.js`)
-		, exec= (ctx, src) => { with(ctx) eval(src) }
+		done= (...t) => Promise.all(t)
+		exec= (ctx, src, out) => {
+			with(ctx) eval('out=' + src)
+			return out }
 		
-		['base', 'wall', 'home'].map(load)
+		reader= r => new Proxy({}, {get: (o,k)=> r(k,o)})
+		writer= w => new Proxy({}, {set: (o,k,v)=> w(k,v,o)})
+		
+		free= {}
+		lock= l => window[l]= new Promise(r=> free[l]= r)
+		unit= reader(path => load(path))
+		load= path => reader(file => 
+			import(`/${path}/${file}.js`)
+			&& lock(file))
+		
+		const {util, comp}= unit
+		, {temp, plug, base}= util
+		, {back, home}= comp
 	</script>
 </head>
 
 <body>
 	<div id="info"></div>
-	<canvas></canvas>
+	<canvas id="wall"></canvas>
 	<header></header>
 	<main></main>
 </body>

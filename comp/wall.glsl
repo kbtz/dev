@@ -1,29 +1,34 @@
 ///// common
-precision 𝚖𝚏;
+precision mediump float ;
 
-𝚍P gl_FragCoord.xy
-𝚍A 𝚙(1.,.5)
-𝚍G R.zw
-𝚍O mod(F, 2.) == 1.
-𝚍N(x) max(0.,min(1.,x))
+#define P gl_FragCoord.xy
+#define A vec2 (1.,.5)
+#define O mod(F, 2.) == 1.
+#define N(x) max(0.,min(1.,x))
 
-𝚞𝚏S; 𝚞𝚟R; 𝚞𝚏T; 𝚞𝚏F; 𝚞𝚙M; 𝚞𝚌C;
+uniform float S;
+uniform float T;
+uniform float F;
+uniform vec2 R;
+uniform vec2 G;
+uniform vec2 M;
+uniform vec3 C;
 
-𝚑𝚏N21(𝚙i) {
-	𝚏r = dot(i.xy, 𝚙(12.9898,78.233));
+highp float N21(vec2 i) {
+	float r = dot(i.xy, vec2 (12.9898,78.233));
 	return fract(sin(mod(r,3.14))*43758.5453);
 }
 ///// fragment grid
-𝚞𝚜self;
-𝚞𝚜logo;
+uniform sampler2D self;
+uniform sampler2D icon;
 
-𝚟setup(𝚙p) {
-	𝚏alpha = T < 2. ? 0. : 1.;
-	return 𝚟(0., N21(p * F), N21(p * T), alpha);
+vec4 setup(vec2 p) {
+	float alpha = T < 2. ? 0. : 1.;
+	return vec4 (0., N21(p * F), N21(p * T), alpha);
 }
 
-𝚙fit(𝚙p) {
-	𝚏
+vec2 fit(vec2 p) {
+	float 
 		x=G.x, y=G.y/2.,
 		b=max(x,y), s=min(x,y), a=s/b,
 		i0=(1.-a)/2., i1=i0+a;
@@ -33,39 +38,38 @@ precision 𝚖𝚏;
 	return p;
 }
 
-𝚋inside(𝚙p) {
-	𝚟l = texture2D(logo, fit(p));
+bool inside(vec2 p) {
+	vec4 l = texture2D(icon, fit(p));
 	return l.r > .2;
 }
 
-𝚏ripple() {
-	𝚏t = (T - C.z)/.4;
+float ripple() {
+	float t = (T - C.z)/.4;
 	if(t > 1.) return 1.;
-	𝚏m = length((P - C.xy*G)*A)/min(G.x, G.y);
+	float m = length((P - C.xy*G)*A)/min(G.x, G.y);
 	return (abs(t-m) < .05 && N21(P*T) > .8) ? 1.-m : 1.;
 }
 
-
-const 𝚏ct=5., co=8.;
-𝚏curtain(𝚙p, 𝚏a) {
+const float ct=5., co=8.;
+float curtain(vec2 p, float a) {
 	if(T < co) return a;
-	𝚏 y = p.y * 2. - 1.
+	float y = p.y * 2. - 1.
 	, tm=mod(T-co, ct * 4.)/ct, t=mod(tm, 2.)
 	, cd=G.x*.05, cs=G.x*.9, cdf=tm>2. ? -1. : 1.;
 	if(t>1.) t=2.-t;
 	t=1. - pow(1. - t,4.);
-	𝚏cst=cs*t, pl=(G.x-cst)/2. + cd * t * cdf * y, pr=pl+cst;
-	if(P.x>pl && P.x<pr) a-=.01;
+	float cst=cs*t, pl=(G.x-cst)/2. + cd * t * cdf * y, pr=pl+cst;
+	if(P.x>pl && P.x<pr) a-=.1;
 	else a+=.01;
 	return a;
 }
 
-𝚟update(𝚙p) {
-	𝚟
+vec4 update(vec2 p) {
+	vec4 
 		t = texture2D(self, p),
-		l = texture2D(logo, fit(p));
+		l = texture2D(icon, fit(p));
 	
-	𝚏bstep = t.g * 2. - 1.,
+	float bstep = t.g * 2. - 1.,
 		mouse = length((P - M*G)*A),
 		around = max(0., 1. - mouse/10.);
 	
@@ -82,8 +86,8 @@ const 𝚏ct=5., co=8.;
 		t.a *= ripple();
 	}
 	
-	// logo fade in/out
-	𝚋hover = inside(M);
+	// icon fade in/out
+	bool hover = inside(M);
 	if(T > 2. && l.r > .2) {
 		if(t.r < .8 || hover)
 			t.r += 0.01 * (.2 + p.y);
@@ -108,24 +112,25 @@ void main() {
 }
 
 ///// fragment main
-𝚞𝚜texA;
-𝚞𝚜texB;
+uniform sampler2D ping;
+uniform sampler2D pong;
 
-𝚟texel(𝚙p) {
+vec4 texel(vec2 p) {
 	if (fract(p.x/(S*2.)) > .5)
 		p.y += S/2.;
-	𝚙t = p/S, g = fract(t);
+	vec2 t = p/S, g = fract(t);
 	t.y *= 2.; g.x /= 2.;
 	if (g.y <= .5 && g.y > g.x || g.y > 1. - g.x)
 		t.y += 1.;
 	t /= G;
+	
 	return O
-		? texture2D(texA, t)
-		: texture2D(texB, t);
+		? texture2D(ping, t)
+		: texture2D(pong, t);
 }
 
-𝚏noise(𝚏c) {
-	𝚏t = .8;
+float noise(float c) {
+	float t = .8;
 	if(c > t) c += c - t;
 	else c -= t - c;
 	
@@ -135,33 +140,33 @@ void main() {
 	return c;
 }
 
-𝚋inside() {
-	𝚏key = texture2D(texA, 𝚙(0., 0.)).r;
+bool inside() {
+	float key = texture2D(ping, vec2 (0., 0.)).r;
 	return key > .5;
 }
 
-𝚏logo(𝚏c, 𝚏l) {
+float icon(float c, float l) {
 	if(P.x < S*2.) return c;
 	c -= l * .5;
 	return c;
 }
 
 void main() {
-	𝚋hover = inside();
-	𝚟t = texel(P);
-	𝚏c = logo(t.b, t.r);
-	𝚌g = 𝚌(noise(c));
+	bool hover = inside();
+	vec4 t = texel(P);
+	float c = icon(t.b, t.r);
+	vec3 g = vec3 (noise(c));
 	
-	gl_FragColor = 𝚟(g, t.a);
+	gl_FragColor = vec4 (g, t.a);
 	
 	if(P.x < 1. && P.y < 1.)
 		gl_FragColor.r = hover ? 1. : 0.;
 }
 ///// common
-precision 𝚖𝚏;
+precision mediump float;
 ///// vertex
-attribute 𝚌 pos;
+attribute vec3  pos;
 
 void main() {
-	gl_Position = 𝚟(pos * 2. - 1., 1);
+	gl_Position = vec4 (pos * 2. - 1., 1);
 }
