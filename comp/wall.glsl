@@ -3,8 +3,11 @@ precision mediump float;
 
 #define P gl_FragCoord.xy
 #define A vec2 (1.,.5)
-#define O mod(F, 2.) == 1.
+#define O(x) mod(x, 2.) == 1.
+#define E(x) mod(x, 2.) == 0.
+#define Q(x) N21(gl_FragCoord.xy*x)
 #define N(x) max(0.,min(1.,x))
+#define SS(l,r,x) smoothstep(l,r,x)
 
 uniform float S;
 uniform float T;
@@ -16,56 +19,56 @@ uniform vec3 C;
 
 highp float N21(vec2 i) {
 	float r = dot(i.xy, vec2 (12.9898,78.233));
-	return fract(sin(mod(r,3.14))*43758.5453);
-}
+	return fract(sin(mod(r,3.14))*43758.5453); }
+
 ///// fragment grid
 uniform sampler2D self;
 uniform sampler2D icon;
 
-vec4 setup(vec2 p) {
-	float alpha = T < 2. ? 0. : 1.;
-	return vec4 (0., N21(p * F), N21(p * T), alpha);
-}
+uniform float Wc;
+uniform float Wt;
 
 vec2 fit(vec2 p) {
-	float
-		x=G.x, y=G.y/2.,
-		b=max(x,y), s=min(x,y), a=s/b,
-		i0=(1.-a)/2., i1=i0+a;
+	float x=G.x, y=G.y/2.
+	, a=min(x,y)/max(x,y)
+	, l=(1.-a)/2.;
 	
-	if(x > y) p.x = N((p.x-i0)/a);
-	else p.y = N((p.y-i0)/a);
-	return p;
-}
+	if(x > y) p.x = N((p.x-l)/a);
+	else p.y = N((p.y-l)/a);
+	return p; }
 
 bool inside(vec2 p) {
-	vec4 l = texture2D(icon, fit(p));
-	return l.r > .2;
-}
+	return texture2D(icon, fit(p)).r > .2; }
 
 float ripple() {
 	float t = (T - C.z)/.4;
 	if(t > 1.) return 1.;
 	float m = length((P - C.xy*G)*A)/min(G.x, G.y);
-	return (abs(t-m) < .05 && N21(P*T) > .8) ? 1.-m : 1.;
-}
+	return (abs(t-m) < .05 && N21(P*T) > .8) ? 1.-m : 1.; }
 
-const float ct=5., co=18.;
+const float cD=3., cE=6., cO=.9, cG=24.;
 float curtain(vec2 p, float a) {
-	if(T < co) return a;
-	float y = p.y * 2. - 1.
-	, tm=mod(T-co, ct * 4.)/ct, t=mod(tm, 2.)
-	, cd=G.x*.05, cs=G.x*.9, cdf=tm>2. ? -1. : 1.;
-	if(t>1.) t=2.-t;
-	t=1. - pow(1. - t,4.);
-	float cst=cs*t, pl=(G.x-cst)/2. + cd * t * cdf * y, pr=pl+cst;
-	if(P.x>pl && P.x<pr) a-=.1;
-	else a+=.01;
-	return a;
-}
+	float t= (T-Wt)/cD;
+	if(t>2.) return a; t= min(1., t);
+	if(E(Wc)) t= pow(1.-t,cE);
+	else t= 1.-pow(1.-t,cE);
+	
+	float cid= ceil(Wc/2.), pid= Q(cid)
+	, y= O(cid)?p.y:1.-p.y, s=(y*2.-1.)*((1.-cO)/2.)*t
+	, o= cO*t, l=(1.-o)/2.+s, r=l+o
+	, g= cG/G.x, d=SS(l+g,l,p.x)+SS(r-g,r,p.x);
+	
+	if(pid>=d) a-=.1;
+	else {
+		if(d<1. && O(Wc)) a=max(a-.05, d);
+		else a+=.5;
+	}
+	return a; }
 
-vec4 update(vec2 p) {
-	vec4 
+vec4 tick() {
+	vec2 p= P/G;
+	
+	vec4
 		t = texture2D(self, p),
 		l = texture2D(icon, fit(p));
 	
@@ -79,16 +82,17 @@ vec4 update(vec2 p) {
 	t.b += sign(bstep) * (l.r/400.);
 	
 	// initial fade in
-	if(T < 4.) {
-		if(t.g < T/3.) t.a += .02;
+	if(T < 1.) {
+		if(t.g < T/3.) t.a += .2;
+		t.a += .2;
 	} else {
 		t.a = curtain(p, t.a);
-		t.a *= ripple();
+		//t.a *= ripple(); //FIXME
 	}
 	
 	// icon fade in/out
 	bool hover = inside(M);
-	if(T > 2. && l.r > .2) {
+	if(T > 0. && l.r > .2) {
 		if(t.r < .8 || hover)
 			t.r += 0.01 * (.2 + p.y);
 		if(t.r > .8 && !hover)
@@ -105,10 +109,14 @@ vec4 update(vec2 p) {
 	return t;
 }
 
+vec4 seed() {
+	bool fadeIn = T < 2.;
+	return vec4(0., Q(F), Q(T), fadeIn ? 0. : 1.);
+}
+
 void main() {
 	gl_FragColor = F == 1.
-		? setup(P)
-		: update(P/G);
+		? seed() : tick();
 }
 
 ///// fragment main
@@ -124,7 +132,7 @@ vec4 texel(vec2 p) {
 		t.y += 1.;
 	t /= G;
 	
-	return O
+	return O(F)
 		? texture2D(ping, t)
 		: texture2D(pong, t);
 }

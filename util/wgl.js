@@ -12,11 +12,12 @@ class Context {
 		for(const f of this.base.keys.map(k => this[k])) {
 			if(f && f[𝚃].F) this[f.name]=
 				exec(context, 'function '+f.toString()) } }
-} 
+}
 
 class WGL extends Context {
 	launched= Date.sec
 	keyPixel= new Uint8Array(4)
+	resized= false
 	
 	textures= []
 	programs= {}
@@ -166,9 +167,12 @@ class WGL extends Context {
 		for(const program of programs) {
 			useProgram(program)
 			bindFramebuffer(FRAMEBUFFER, program.fbo ?? null)
-			viewport(0, 0, ...program.size)
-			drawArrays(TRIANGLE_STRIP, 0, 4)
-		} }
+			
+			if(this.resized)
+				viewport(0, 0, ...program.size)
+			
+			drawArrays(TRIANGLE_STRIP, 0, 4) }
+		this.resized= false }
 }
 
 WGL.expose

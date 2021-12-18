@@ -23,6 +23,8 @@ const aliases=
 	, array: 'Array.isArray'
 	, keys: 'Reflect.ownKeys'
 	, pair: 'Object.entries'
+	, cancel: 'clearInterval'
+	, after: 'setTimeout'
 	, vk: '(v, k) =' }
 , transforms=
 	[ [/~\w+/g, alias],
@@ -30,6 +32,7 @@ const aliases=
 	, ['>>=', ['for(const [K, V] of Object.entries(', '))']]
 	, ['<<=', ['const ', '= T.', '.bond']]
 	, [/\[{[^\]]+}]/, capture]
+	, ['𝞃', ['', '*1000']]
 	, ['>>', ['new Proxy(', ', { get: (P, K) => ', '})']]
 	, ['<<', ['new Proxy(', ', { set: (P, K, V) => ', '})']] ]
 
@@ -79,7 +82,7 @@ function patch(s, p, t, ...a) {
 	else if(typeof t == 'function')
 		s= t(s, ...a)
 	
-	return s }
+	return patch(s, p, t, ...a) }
 
 function clean(s, lc, rc= lc) {
 	s= s.trim()
@@ -101,8 +104,7 @@ function capture(s) {
 
 function alias(s) {
 	return s.replace(/~\w+/g, n =>
-		aliases[n=n.slice(1)] || n+' => '+n ) }
-	
+		aliases[n=n.slice(1)] || n+' => '+n )}
 
 function canReturn(s) {
 	return !['return', 'for', 'const']
