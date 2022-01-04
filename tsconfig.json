@@ -1,0 +1,39 @@
+{
+	"compilerOptions": {
+		"baseUrl": "./src",
+		"paths": {
+			"-*": [
+				"directives/*.ts"
+			],
+			"+*": [
+				"helpers/*.ts"
+			],
+			"#*": [
+				"assets/*"
+			],
+			"~*": [
+				"components/*.vue"
+			]
+		},
+		"target": "esnext",
+		"useDefineForClassFields": true,
+		"module": "esnext",
+		"moduleResolution": "node",
+		"strict": true,
+		"jsx": "preserve",
+		"sourceMap": true,
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"lib": [
+			"esnext",
+			"dom"
+		]
+	},
+	"include": [
+		"env/*.d.ts",
+		"env/*.ts",
+		"src/**/*.ts",
+		"src/**/*.tsx",
+		"src/**/*.vue"
+	]
+}

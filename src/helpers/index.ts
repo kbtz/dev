@@ -1,0 +1,8 @@
+import './symbol'
+import './proxy'
+import './proto'
+import './object'
+import './function'
+import './array'
+import './string'
+import './misc'

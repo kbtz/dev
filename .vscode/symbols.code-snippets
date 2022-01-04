@@ -1,0 +1,77 @@
+{
+	"object keys": {
+		"scope": "javascript,typescript",
+		"prefix": "kk",
+		"body": "𝝹"
+	},
+	"object values": {
+		"scope": "javascript,typescript",
+		"prefix": "vv",
+		"body": "𝝼"
+	},
+	"object entries": {
+		"scope": "javascript,typescript",
+		"prefix": "kv",
+		"body": "𝝹𝝼"
+	},
+	"proto prop": {
+		"scope": "javascript,typescript",
+		"prefix": "ppp",
+		"body": "𝞀"
+	},
+	"proto trap": {
+		"scope": "javascript,typescript",
+		"prefix": "ppt",
+		"body": "𝞃"
+	},
+	"proto function": {
+		"scope": "javascript,typescript",
+		"prefix": "ppf",
+		"body": "𝝠"
+	},
+	"union": {
+		"scope": "javascript,typescript",
+		"prefix": "uu",
+		"body": "𝞄"
+	},
+	"type object": {
+		"scope": "typescript",
+		"prefix": "tto",
+		"body": "𝝷"
+	},
+	"type function": {
+		"scope": "typescript",
+		"prefix": "ttf",
+		"body": "𝝺"
+	},
+	"type symbol": {
+		"scope": "typescript",
+		"prefix": "tty",
+		"body": "𝝻"
+	},
+	"type boolean": {
+		"scope": "typescript",
+		"prefix": "ttb",
+		"body": "𝝱"
+	},
+	"type number": {
+		"scope": "typescript",
+		"prefix": "ttn",
+		"body": "𝝶"
+	},
+	"type string": {
+		"scope": "typescript",
+		"prefix": "tts",
+		"body": "𝞁"
+	},
+	"type array/vector": {
+		"scope": "typescript",
+		"prefix": "ttv",
+		"body": "𝝣"
+	},
+	"type any": {
+		"scope": "typescript",
+		"prefix": "tta",
+		"body": "𝞌"
+	},
+}

@@ -2,57 +2,18 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
+	<meta charset="UTF-8" />
+	<link rel="icon" href="/favicon.png" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>kbtzᵈᵉᵛ</title>
-	<link href="/favicon.png" rel="icon" type="image/png">
-	
-	<style>
-		body {
-			margin: 0;
-			height: 100vh;
-			overflow: hidden;
-			background: #111;
-		}	
-		
-		#wall {
-			pointer-events: none;
-			position: fixed;
-			top: 0;
-			left: 0;
-		}
-	</style>
-	
-	<link href="/comp/wall.glsl" rel="preload" as="fetch" crossorigin>
-	<link href="/icon/logo.png" rel="preload" as="image">
-	
 	<script>
 		"non strict";
-		done= (...t) => Promise.all(t)
-		exec= (ctx, src, out) => {
-			with(ctx) eval('out=' + src)
-			return out }
-		
-		reader= r => new Proxy({}, {get: (o,k)=> r(k,o)})
-		writer= w => new Proxy({}, {set: (o,k,v)=> w(k,v,o)})
-		
-		free= {}
-		lock= l => window[l]= new Promise(r=> free[l]= r)
-		unit= reader(path => load(path))
-		load= path => reader(file => 
-			import(`/${path}/${file}.js`)
-			&& lock(file))
-		
-		const {util, comp}= unit
-		, {temp, plug, base}= util
-		, {back, home}= comp
+		exec = (ctx, src, out) => {
+			with (ctx) eval('out=' + src)
+			return out
+		}
 	</script>
+	<script type="module" src="/src/main.ts"></script>
 </head>
-
-<body>
-	<div id="info"></div>
-	<canvas id="wall"></canvas>
-	<header></header>
-	<main></main>
-</body>
 
 </html>
