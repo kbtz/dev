@@ -3,16 +3,16 @@
 		"baseUrl": "./src",
 		"paths": {
 			"-*": [
-				"directives/*.ts"
+				"attr/*.ts"
 			],
 			"+*": [
-				"helpers/*.ts"
+				"util/*.ts"
 			],
 			"#*": [
-				"assets/*"
+				"file/*"
 			],
 			"~*": [
-				"components/*.vue"
+				"comp/*"
 			]
 		},
 		"target": "esnext",

@@ -1,16 +1,12 @@
 <script setup lang='ts'>
-import { ref, onMounted, reactive, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import vPage from '-page'
 
 import backdrop from '+backdrop'
 import shaders from '#shaders.glsl?raw'
 import logo from '#logo.gif'
 
-const
-	canvas = ref(),
-	props = defineProps({
-		open: { type: Boolean, default: false }
-	})
+const canvas = ref()
 
 onMounted(() => {
 	backdrop.is.done = false
