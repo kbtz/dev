@@ -29,10 +29,15 @@
 		"prefix": "ppf",
 		"body": "𝝠"
 	},
-	"union": {
+	"union (effect)": {
 		"scope": "javascript,typescript",
 		"prefix": "uu",
-		"body": "𝞄"
+		"body": "𝞏"
+	},
+	"union (return)": {
+		"scope": "javascript,typescript",
+		"prefix": "ur",
+		"body": "𝞈"
 	},
 	"type object": {
 		"scope": "typescript",

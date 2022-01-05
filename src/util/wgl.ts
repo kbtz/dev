@@ -35,7 +35,7 @@ export class WGL extends Context {
 		})
 
 		this[𝞀].uniform = () => uniform
-		this[𝞃].uniform = (values) => values[𝞄] = uniform
+		this[𝞃].uniform = (values) => values[𝞈] = uniform
 	}
 
 	compile(input: 𝞁): 𝝷<Program> {
@@ -55,7 +55,7 @@ export class WGL extends Context {
 			}
 		}
 
-		return programs[𝞄] = this.programs
+		return programs[𝞈] = this.programs
 	}
 
 	program(name: 𝞁): Program {
@@ -70,7 +70,7 @@ export class WGL extends Context {
 				cache[name] ||= getUniformLocation(program, name))
 
 		program[𝞀].uniforms = () => uniforms
-		program[𝞃].uniforms = values => values[𝞄] = uniforms
+		program[𝞃].uniforms = values => values[𝞈] = uniforms
 
 		program.locations = locations
 		program.name = name
@@ -128,7 +128,7 @@ export class WGL extends Context {
 		}
 
 		tex.update = (size, data = null) => {
-			tex[𝞄] = { size, data }
+			tex[𝞏] = { size, data }
 			tex.bind(tex.index)
 			texImage2D(TEXTURE_2D, 0, RGBA, ...size, 0, RGBA, UNSIGNED_BYTE, data)
 		}

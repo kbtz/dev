@@ -72,7 +72,7 @@ function draw() {
 }
 
 function resize() {
-	window.size[𝞄] = canvas
+	canvas[𝞏] = window.size
 	w = window.size.width
 	h = window.size.height
 
@@ -90,7 +90,6 @@ function mousemove({ pageX: x, pageY: y }: MouseEvent) {
 	gl.uniforms.M = [x / w, (h - y) / h]
 	const [key] = gl.read()
 	hover = closed && key > 10
-	document.title = hover ? 'yay' : 'nay'
 }
 
 function click() {

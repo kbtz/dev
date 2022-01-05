@@ -1,5 +1,6 @@
 interface Object {
-	[𝞄]: 𝝷
+	[𝞈]: 𝝷
+	[𝞏]: 𝝷
 	[𝞀]: Dict<OGet>
 	[𝞃]: Dict<OSet>
 	[𝝠]: Dict<𝝺>
