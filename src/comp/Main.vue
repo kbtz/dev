@@ -2,13 +2,13 @@
 import Backdrop from '<Backdrop.vue';
 import Scene from '<Scene.vue';
 
-const { cover, pointer } = value
+const { cover, pointer } = state.track
 </script>
 
 <template>
 	<main :class="{ cover, pointer }">
-		<Backdrop />
 		<Scene />
+		<Backdrop />
 	</main>
 </template>
 

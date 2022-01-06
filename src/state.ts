@@ -1,18 +1,19 @@
 import { computed, reactive } from 'vue';
 
-const state = reactive({
-	page: '/',
-	cover: true,
-	pointer: false,
-})
+const
+	state = reactive({
+		page: '/',
+		cover: true,
+		pointer: false,
+	}),
+	track = Proxy.reader((name, cache) =>
+		cache[name] ||= computed(() => state[name as keyof State]))
 
-const value = new Proxy(state, {
-	get: (s, k: keyof State) => computed(() => s[k])
-})
-
-export type State = typeof state
+state[𝞀].track = () => track
 
 for (let name in state)
 	window[𝞀][name] = () => state[name as keyof State]
 
-window[𝞏] = { state, value }
+window[𝞏] = { state }
+
+export type State = typeof state

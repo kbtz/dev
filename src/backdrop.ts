@@ -24,7 +24,6 @@ function init(target: HTMLCanvasElement, shaders: string) {
 	grid = programs.grid
 	grid.fbo = gl.framebuffer()
 
-
 	ping = gl.texture()
 	pong = gl.texture()
 	icon = gl.texture()
@@ -88,17 +87,16 @@ function mousemove({ pageX: x, pageY: y }: MouseEvent) {
 
 function click() {
 	if (is.ready && cover && pointer)
-		open()
+		state.cover = false
 }
 
 function open() {
-	state.pointer = state.cover = false
+	state.pointer = false
 	grid.uniforms.Wc++
 	grid.uniforms.Wt = grid.uniforms.T
 }
 
 function close() {
-	state.cover = true
 	grid.uniforms.Wc++
 	grid.uniforms.Wt = grid.uniforms.T
 }
@@ -112,7 +110,7 @@ function blur() {
 }
 
 export default {
-	init, is,
+	init, close, open, is,
 	events: { resize, mousemove, click, focus, blur },
 	set icon(url: 𝞁) {
 		let img = new Image
