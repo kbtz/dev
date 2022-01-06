@@ -1,14 +1,14 @@
-import { WGL, Texture, Program } from './wgl'
+import { WGL, Texture, Program } from '+wgl'
 
 let
 	canvas: HTMLCanvasElement,
 	gl: WGL, main: Program, grid: Program,
 	ping: Texture, pong: Texture, icon: Texture,
 	tile = 12, w: number, h: number,
-	paused = false, ready = false,
-	closed = true, hover = false,
 	is = {
-		done: false
+		ready: false,
+		paused: false,
+		done: false,
 	}
 
 const
@@ -24,6 +24,7 @@ function init(target: HTMLCanvasElement, shaders: string) {
 	grid = programs.grid
 	grid.fbo = gl.framebuffer()
 
+
 	ping = gl.texture()
 	pong = gl.texture()
 	icon = gl.texture()
@@ -38,23 +39,16 @@ function init(target: HTMLCanvasElement, shaders: string) {
 	grid.uniforms = { self: '2', icon: '3', Wc: 0, Wt: -10 }
 
 	resize(), redraw()
+	intro.after(4)
 }
 
 function intro() {
-	//const { target: logo } = await fetch.image('/icon/logo.png')
-	//await sleep(4) // intro duration
-	/*
-	icon.update(logo.size, logo)
-	tag.closed.on
-	
-	wall.join({ open, close })
-	free.wall()
-	*/
+	is.ready = true
 }
 
 function redraw() {
 	if (is.done) return
-	if (paused) redraw.after(.1)
+	if (is.paused) redraw.after(.1)
 	else draw()
 }
 
@@ -89,32 +83,32 @@ function resize() {
 function mousemove({ pageX: x, pageY: y }: MouseEvent) {
 	gl.uniforms.M = [x / w, (h - y) / h]
 	const [key] = gl.read()
-	hover = closed && key > 10
+	state.pointer = cover && key > 10
 }
 
 function click() {
-	if (ready && closed && hover)
+	if (is.ready && cover && pointer)
 		open()
 }
 
 function open() {
-	hover = closed = false
+	state.pointer = state.cover = false
 	grid.uniforms.Wc++
 	grid.uniforms.Wt = grid.uniforms.T
 }
 
 function close() {
-	closed = true
+	state.cover = true
 	grid.uniforms.Wc++
 	grid.uniforms.Wt = grid.uniforms.T
 }
 
 function focus() {
-	paused = false
+	is.paused = false
 }
 
 function blur() {
-	paused = true
+	is.paused = true
 }
 
 export default {

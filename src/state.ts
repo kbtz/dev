@@ -2,7 +2,8 @@ import { computed, reactive } from 'vue';
 
 const state = reactive({
 	page: '/',
-	closed: true
+	cover: true,
+	pointer: false,
 })
 
 const value = new Proxy(state, {
@@ -10,4 +11,8 @@ const value = new Proxy(state, {
 })
 
 export type State = typeof state
+
+for (let name in state)
+	window[𝞀][name] = () => state[name as keyof State]
+
 window[𝞏] = { state, value }

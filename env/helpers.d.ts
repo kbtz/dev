@@ -7,7 +7,7 @@ interface Object {
 	[k: 𝞁]: 𝞌 | undefined
 }
 
-type Dict<T, K extends 𝞁 = 𝞁> =
+type Dict<T = 𝞌, K extends 𝞁 = 𝞁> =
 	{
 		[𝝹]?: K[]
 		[𝝼]?: T[]

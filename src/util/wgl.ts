@@ -137,7 +137,7 @@ export class WGL extends Context {
 	}
 
 	link() {
-		this.programs[𝝼].each(p => linkProgram(p))
+		this.programs[𝝼].each(linkProgram.bind(ctx))
 		this.textures.each((t, i) => t.bind(i))
 		this.uniforms = { T: 0, F: 0, M: [-.5, -.5], C: [0, 0, -10] }
 	}
@@ -156,10 +156,8 @@ export class WGL extends Context {
 
 		useProgram(program)
 
-		const vec = [, ,
-			(...a) => uniform2fv(...a),
-			(...a) => uniform3fv(...a),
-			(...a) => uniform4fv(...a)]
+		const vec = [, , uniform2fv, uniform3fv, uniform4fv]
+			.map(f => f?.bind(ctx))
 
 		switch (typeof value) {
 			case 'boolean':
@@ -170,8 +168,8 @@ export class WGL extends Context {
 				uniform1i(location, +value)
 				break
 			case 'object':
-				if (Array.isArray(value))
-					vec[value.length](location, value)
+				Array.isArray(value) && vec[value.length]
+					&& vec[value.length](location, value)
 				break
 			default:
 				throw 'type assertion failed'

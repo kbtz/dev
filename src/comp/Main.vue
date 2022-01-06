@@ -1,10 +1,12 @@
 <script setup lang='ts'>
-import Backdrop from '~Backdrop.vue';
-import Scene from '~Scene.vue';
+import Backdrop from '<Backdrop.vue';
+import Scene from '<Scene.vue';
+
+const { cover, pointer } = value
 </script>
 
 <template>
-	<main>
+	<main :class="{ cover, pointer }">
 		<Backdrop />
 		<Scene />
 	</main>
@@ -14,5 +16,9 @@ import Scene from '~Scene.vue';
 main {
 	width: 100vw;
 	height: 100vh;
+}
+
+main.pointer {
+	cursor: pointer;
 }
 </style>

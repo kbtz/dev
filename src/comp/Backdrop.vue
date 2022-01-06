@@ -1,8 +1,8 @@
 <script setup lang='ts'>
 import { ref, onMounted, onUnmounted } from 'vue'
-import vPage from '-page'
 
-import backdrop from '+backdrop'
+import backdrop from '|backdrop'
+import vPage from '-page'
 import shaders from '#shaders.glsl?raw'
 import logo from '#logo.gif'
 

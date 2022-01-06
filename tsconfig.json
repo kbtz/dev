@@ -2,18 +2,21 @@
 	"compilerOptions": {
 		"baseUrl": "./src",
 		"paths": {
-			"-*": [
-				"attr/*.ts"
+			"|*": [
+				"*.ts"
 			],
 			"+*": [
 				"util/*.ts"
 			],
+			"<*": [
+				"comp/*"
+			],
+			"-*": [
+				"attr/*.ts"
+			],
 			"#*": [
 				"file/*"
 			],
-			"~*": [
-				"comp/*"
-			]
 		},
 		"target": "esnext",
 		"useDefineForClassFields": true,
