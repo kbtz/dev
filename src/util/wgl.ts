@@ -83,8 +83,17 @@ export class WGL extends Context {
 		shaderSource(shader, source)
 		compileShader(shader)
 
-		if (!getShaderParameter(shader, COMPILE_STATUS))
-			throw getShaderInfoLog(shader)
+		if (!getShaderParameter(shader, COMPILE_STATUS)) {
+			const
+				err = getShaderInfoLog(shader) as 𝞁,
+				line = +(err.match(/0:(\d+)/)?.at([1]))
+
+			if (line) console.debug(
+				source.split('\n').slice(line - 4, line + 4).join('\n'))
+
+			throw err
+		}
+
 		return shader
 	}
 

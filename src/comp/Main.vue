@@ -6,7 +6,7 @@ const { cover, pointer } = state.track
 </script>
 
 <template>
-	<main :class="{ cover, pointer }">
+	<main class="debug" :class="{ cover, pointer }">
 		<Scene />
 		<Backdrop />
 	</main>

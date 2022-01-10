@@ -51,7 +51,7 @@ float ripple() {
 	return (abs(t - m) < .05 && N21(P * T) > .8) ? 1. - m : 1.;
 }
 
-const float cT = 3., cE = 6., cSr = 64., cGr = 128.;
+const float cT = 2.5, cE = 4., cSr = 64., cGr = 256.;
 float curtain(vec2 p, float a) {
 	float t = (T - Wt) / cT;
 	if(t > 2.) return a;
@@ -71,10 +71,10 @@ float curtain(vec2 p, float a) {
 		d = SS(l + g, l, p.x) + SS(r - g, r, p.x);
 
 	if(pid >= d)
-		a -= .1;
+		a -= .2;
 	else {
 		if(d < 1. && O(Wc))
-			a = max(a - .05, d);
+			a = max(a - .1, d);
 		else
 			a += .5;
 	}
@@ -87,7 +87,10 @@ vec4 tick() {
 
 	vec4 t = texture2D(self, p), l = texture2D(icon, fit(p));
 
-	float bstep = t.g * 2. - 1., mouse = length((P - M * G) * A), around = max(0., 1. - mouse / 10.);
+	float
+		bstep = t.g * 2. - 1.,
+		mouse = length((P - M * G) * A),
+		around = max(0., 1. - mouse / 10.);
 
 	// grid tile darken/lighten
 	t.b += bstep / 200.;
@@ -117,6 +120,8 @@ vec4 tick() {
 	if(P.x < 1. && P.y < 1.)
 		t.r = hover ? 1. : 0.;
 
+	// hide logo when open
+	if(O(Wc)) t.r -= .05;
 	return t;
 }
 
@@ -146,16 +151,11 @@ vec4 texel(vec2 p) {
 	return O(F) ? texture2D(ping, t) : texture2D(pong, t);
 }
 
-float noise(float c) {
-	float t = .8;
+float darken(float c, float t) {
 	if(c > t)
 		c += c - t;
 	else
 		c -= t - c;
-
-	c += sin((P.x - P.y) * 30.) / 2.;
-	c += N21(P) / 2.;
-	c /= 2.5;
 	return c;
 }
 
@@ -174,10 +174,19 @@ float icon(float c, float l) {
 void main() {
 	bool hover = inside();
 	vec4 t = texel(P);
-	float c = icon(t.b, t.r);
-	vec3 g = vec3(noise(c));
+	float
+		i = icon(t.b, t.r),
+		c = darken(i, .8),
+		d = sin((P.x - P.y) * 30.) / 2.,
+		n = N21(P),
+		a = 1. - t.a,
+		g =
+			n / 3. +
+			c * t.a / 3. +
+			d * i / 3. +
+			d * a;
 
-	gl_FragColor = vec4(g, t.a);
+	gl_FragColor = vec4(vec3(g), max(.1, t.a));
 
 	if(P.x < 1. && P.y < 1.)
 		gl_FragColor.rgb = vec3(hover ? .1 : .0);

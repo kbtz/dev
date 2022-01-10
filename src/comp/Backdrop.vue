@@ -23,7 +23,6 @@ watch(state.track.cover, value => {
 	if (value) backdrop.close()
 	else backdrop.open()
 })
-
 </script>
 
 <template>
@@ -36,7 +35,7 @@ main canvas {
 	outline: 1px solid red;
 }
 
-main:not(.closed) canvas {
+main:not(.cover) canvas {
 	pointer-events: none;
 }
 </style>

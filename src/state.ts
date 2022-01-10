@@ -4,6 +4,7 @@ const
 	state = reactive({
 		page: '/',
 		cover: true,
+		intro: true,
 		pointer: false,
 	}),
 	track = Proxy.reader((name, cache) =>

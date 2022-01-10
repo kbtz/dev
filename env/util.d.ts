@@ -34,11 +34,14 @@ interface Array<T> {
 	[𝝹𝝼]: KVP<𝝶, T>
 	has: (word: 𝞁) => 𝝱
 	each: Array<T>['forEach']
-	make: <T>(maker: (...a: 𝞌[]) => T) => T[]
+	make: (maker: (...a: 𝞌[]) => T) => T[]
+	pick: T
 }
 
 interface String {
 	in: (words: 𝞁[]) => 𝝱
+	chars: 𝞁[]
+	words: 𝞁[]
 }
 
 interface Window {

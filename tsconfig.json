@@ -2,9 +2,6 @@
 	"compilerOptions": {
 		"baseUrl": "./src",
 		"paths": {
-			"|*": [
-				"*.ts"
-			],
 			"+*": [
 				"util/*.ts"
 			],
@@ -16,6 +13,9 @@
 			],
 			"#*": [
 				"file/*"
+			],
+			"|*": [
+				"*.ts"
 			],
 		},
 		"target": "esnext",

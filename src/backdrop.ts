@@ -4,7 +4,7 @@ let
 	canvas: HTMLCanvasElement,
 	gl: WGL, main: Program, grid: Program,
 	ping: Texture, pong: Texture, icon: Texture,
-	tile = 12, w: number, h: number,
+	tile = 16, w: 𝝶, h: 𝝶,
 	is = {
 		ready: false,
 		paused: false,
@@ -38,7 +38,7 @@ function init(target: HTMLCanvasElement, shaders: string) {
 	grid.uniforms = { self: '2', icon: '3', Wc: 0, Wt: -10 }
 
 	resize(), redraw()
-	intro.after(4)
+	intro.after(1)
 }
 
 function intro() {
@@ -83,6 +83,7 @@ function mousemove({ pageX: x, pageY: y }: MouseEvent) {
 	gl.uniforms.M = [x / w, (h - y) / h]
 	const [key] = gl.read()
 	state.pointer = cover && key > 10
+	is.paused = false
 }
 
 function click() {
