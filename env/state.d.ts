@@ -1,4 +1,4 @@
-import { ComputedRef, readonly } from 'vue'
+import { ComputedRef } from 'vue'
 import { State } from '|state'
 
 declare global {

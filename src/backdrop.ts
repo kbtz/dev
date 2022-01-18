@@ -4,7 +4,7 @@ let
 	canvas: HTMLCanvasElement,
 	gl: WGL, main: Program, grid: Program,
 	ping: Texture, pong: Texture, icon: Texture,
-	tile = 16, w: 𝝶, h: 𝝶,
+	tile = 12, w: 𝝶, h: 𝝶,
 	is = {
 		ready: false,
 		paused: false,

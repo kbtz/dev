@@ -23,8 +23,8 @@ interface ProxyConstructor {
 }
 
 interface Function {
-	after: (seconds: 𝝶, ...a: 𝞌[]) => void
-	debounce: (seconds: 𝝶, ...a: 𝞌[]) => void
+	after: (seconds: 𝝶, ...a: 𝞌[]) => 𝝶
+	debounce: (seconds: 𝝶, ...a: 𝞌[]) => 𝝶
 	hold: 𝝶
 }
 

@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 
 import backdrop from '|backdrop'
 import vPage from '-page'
@@ -19,8 +19,8 @@ onUnmounted(() => {
 	backdrop.is.done = true
 })
 
-watch(state.track.cover, value => {
-	if (value) backdrop.close()
+watch(state.track.cover, closing => {
+	if (closing) backdrop.close()
 	else backdrop.open()
 })
 </script>
@@ -29,13 +29,8 @@ watch(state.track.cover, value => {
 	<canvas ref="canvas" v-page="backdrop.events" />
 </template>
 
-<style >
-main canvas {
-	position: fixed;
-	outline: 1px solid red;
-}
-
-main:not(.cover) canvas {
+<style>
+canvas {
 	pointer-events: none;
 }
 </style>

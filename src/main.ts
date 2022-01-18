@@ -1,4 +1,4 @@
-import '#main.css'
+import '#main.scss'
 import '+base'
 import '|state'
 

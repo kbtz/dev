@@ -51,15 +51,14 @@ float ripple() {
 	return (abs(t - m) < .05 && N21(P * T) > .8) ? 1. - m : 1.;
 }
 
-const float cT = 2.5, cE = 4., cSr = 64., cGr = 256.;
+const float cT = 1., cE = 4., cSr = 64., cGr = 256.;
 float curtain(vec2 p, float a) {
 	float t = (T - Wt) / cT;
 	if(t > 2.) return a;
 	
 	t = min(1., t);
-
-	if(E(Wc)) t = pow(1. - t, cE);
-	else t = 1. - pow(1. - t, cE);
+	t = pow(2., -10. * t);
+	if(O(Wc)) t = 1. - t;
 
 	float
 		cid = ceil(Wc / 2.), pid = Q(cid),
@@ -74,9 +73,9 @@ float curtain(vec2 p, float a) {
 		a -= .2;
 	else {
 		if(d < 1. && O(Wc))
-			a = max(a - .1, d);
+			a = max(a - .5, d);
 		else
-			a += .5;
+			a += .05;
 	}
 
 	return a;
