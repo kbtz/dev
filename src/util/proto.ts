@@ -6,7 +6,9 @@ const
 prop(proto, 𝝠, {
 	get(this: ObjectConstructor) {
 		console.assert(!!this.prototype, '[𝝠] must be used on constructors')
-		return Proxy.trap(this.prototype, (t, k, v: 𝝺) => !!(t[k] = v))
+		return Proxy.trap(this.prototype,
+			(o, k, value: 𝝺) =>
+				prop(o, k, { value, ...options }))
 	},
 	...options
 })

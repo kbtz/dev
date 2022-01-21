@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import Backdrop from '<Backdrop.vue';
 import Header from '<Header.vue';
+import Menu from '<Menu.vue';
 import Main from '<Main.vue'
 </script>
 
-<template class="foo">
+<template>
 	<Backdrop />
 	<Header />
+	<Menu />
 	<Main />
 </template>
 
@@ -26,6 +28,7 @@ body {
 canvas {
 	z-index: 11;
 	grid-area: 1 / 1 / -1 / -1;
+	display: none;
 }
 
 header {
@@ -34,7 +37,6 @@ header {
 
 menu {
 	grid-area: 4 / 3 / 5 / -3;
-	margin: 0;
 }
 
 main {

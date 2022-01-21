@@ -5,6 +5,7 @@ interface Object {
 	[𝞃]: Dict<OSet>
 	[𝝠]: Dict<𝝺>
 	[k: 𝞁]: 𝞌 | undefined
+	map<T>(this: T, f: 𝝺): T
 }
 
 type Dict<T = 𝞌, K extends 𝞁 = 𝞁> =
@@ -20,6 +21,12 @@ interface ProxyConstructor {
 	trap: <T extends 𝝷, V>(target: T, set: PSet<T, V>) => T
 	reader: <T>(read: (key: 𝞁 | 𝝻, target: 𝝷) => T) => 𝝷<T>
 	writer: <T>(write: (key: 𝞁 | 𝝻, value: T, target: 𝝷) => 𝝱) => 𝝷<T>
+}
+
+interface Number {
+	vec: Point
+	px: 𝞁
+	between: (min: 𝝶, max: 𝝶, inclusive?: 𝝱) => 𝝱
 }
 
 interface Function {

@@ -18,3 +18,4 @@ type PGet<T = 𝞌, V = 𝞌> = (t: T, k: 𝞁) => V
 type OGet<V = 𝞌> = () => V
 
 type Ev = keyof HTMLElementEventMap
+type Point = { x: 𝝶, y: 𝝶 }

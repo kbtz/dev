@@ -21,3 +21,12 @@ Object[𝞃][𝞏] = function (target: 𝝷) {
 	Object.assign(this, target)
 	return true
 }
+
+Object[𝝠].map = function <T extends Dict>(this: T, f: 𝝺) {
+	let res = {} as Dict
+
+	for (const [k, v] of this[𝝹𝝼]!)
+		res[k] = f(v, k)
+
+	return res as T
+}
