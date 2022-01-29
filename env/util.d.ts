@@ -24,7 +24,7 @@ interface ProxyConstructor {
 }
 
 interface Number {
-	vec: Point
+	vec: 𝝣<𝝶>
 	px: 𝞁
 	between: (min: 𝝶, max: 𝝶, inclusive?: 𝝱) => 𝝱
 }
@@ -43,6 +43,7 @@ interface Array<T> {
 	each: Array<T>['forEach']
 	make: (maker: (...a: 𝞌[]) => T) => T[]
 	pick: T
+	'+': 𝝣<𝝶> | 𝝶
 }
 
 interface String {

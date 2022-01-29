@@ -1,18 +1,14 @@
-type PlaceDirective = Directive<{ center: Point, size: 𝝶 }>
+type PlaceDirectiveValue = { center: 𝝣<𝝶>, size: 𝝶 }
+type PlaceDirective = Directive<PlaceDirectiveValue>
 
-function getOrigin(el: HTMLElement) {
-	const { width, height } = el.getBoundingClientRect()
-	return [width / 2, height / 2]
+function apply({ style: css }: HTMLElement, { center, size }: PlaceDirectiveValue) {
+	const [x, y] = center
+	css.height = css.width = size.px
+	css.left = (x - size / 2).px
+	css.top = (y - size / 2).px
 }
 
 export default <PlaceDirective>{
-	mounted: (
-		{ style: css, parentElement: parent },
-		{ value: { center: { x, y }, size } }) => {
-		css.height = css.width = size.px
-		// TODO weak cache & resize obs
-		const [ox, oy] = getOrigin(parent!)
-		css.left = (ox + x - size / 2).px
-		css.top = (oy + y - size / 2).px
-	}
+	mounted: (el, { value }) => apply(el, value),
+	updated: (el, { value }) => apply(el, value)
 }

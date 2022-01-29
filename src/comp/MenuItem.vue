@@ -1,48 +1,65 @@
 <script lang="ts" setup>
-import { inject, provide } from 'vue';
+import { computed, inject, provide } from 'vue';
 import vPlace from '-place'
 
+interface Container {
+	origin: 𝝣<𝝶>
+	unit: 𝝶
+	gap: 𝝶
+}
+
 interface Parent {
-	center: Point
+	center: 𝝣<𝝶>
 	size: 𝝶
 }
 
-const props = defineProps({
-	size: { type: Number, default: 1 },
-	origin: { type: Array, validator: (v: 𝝣<𝝶>) => v.length == 2 },
-	anchor: { type: Number, validator: (v: 𝝶) => v.between(0, 5) },
-	align: { type: Number, default: 0, validator: (v: 𝝶) => v.between(-1, 1) },
-})
+const props = defineProps<{
+	center?: [𝝶, 𝝶]
+	size?: 𝝶
+	anchor?: 𝝶
+	align?: 𝝶
+}>()
 
 const
-	anchored = props.anchor != undefined,
-	unit = 24, lenght = (s: 𝝶) => Math.sqrt(3) * (s / 2)
+	container = inject<Container>('container')!,
+	length = (s: 𝝶) => Math.sqrt(3) * (s / 4)
 
-let center: Point, size = props.size * unit
-if (anchored) {
+const self = computed(() => {
 	const
-		gap = unit * <𝝶>inject('gap'),
-		parent = inject('parent') as Parent,
-		angle = 30 + 60 * props.anchor,
-		distance = gap + lenght(parent.size) + lenght(size),
-		translation = angle.vec.map(v => v * distance)
+		{ gap, unit, origin } = container,
+		attach = props.anchor != undefined
 
-	center = parent.center.map((v, k) => v + translation[k as 'x' | 'y'])
-} else {
-	const [x, y] = props.origin! as 𝝣<𝝶>
-	center = { x, y }
-}
+	let { size = 1, align = 0 } = props,
+		center: 𝝣<𝝶>
 
-const self = { center, size }
+	size *= unit
+
+	if (attach) {
+		const
+			parent = inject<Ref<Parent>>('parent', {} as 𝞌)!.value,
+			distance = gap + length(parent.size) + length(size),
+			angle = (30 + props.anchor! * 60),
+			translation = angle.vec.map(v => v * distance)
+
+		center = parent.center.slice()
+		center['+'] = translation
+		if (align) {
+			const alignment = (parent.size - size) / 4 * align
+			center['+'] = (angle + 90).vec.map(v => v * alignment)
+		}
+	} else {
+		center = props.center?.map(v => v * unit) || [0, 0]
+		center['+'] = origin
+	}
+
+	return { center, size }
+})
+
 provide('parent', self)
 </script>
 
 <template>
-	<li v-place="self">
-		<i>{{ size }}</i>
-	</li>
-
-	<!-- slot to flatten element tree -->
+	<li v-place="self"></li>
 	<slot></slot>
 </template>
 
@@ -50,8 +67,15 @@ provide('parent', self)
 body > menu > li {
 	list-style: none;
 	position: absolute;
+	background: var(--light);
 
-	background-color: green;
-	font-size: 50%;
+	mask-image: url("/hex.png");
+	mask-size: contain;
+	-webkit-mask-image: url("/hex.png");
+	-webkit-mask-size: cover;
+
+	&:hover {
+		background-color: aquamarine;
+	}
 }
 </style>

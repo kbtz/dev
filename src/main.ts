@@ -1,6 +1,6 @@
-import '#main.scss'
 import '+base'
 import '|state'
+import '|style'
 
 import { createApp } from 'vue'
 import App from '<App.vue'

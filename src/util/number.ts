@@ -3,7 +3,7 @@ Number[𝞀].vec = function (this: 𝝶) {
 		{ PI, cos, sin } = Math,
 		rad = this / 180 * PI,
 		x = cos(rad), y = sin(rad)
-	return { x, y }
+	return [x, y]
 }
 
 Number[𝞀].px = function (this: 𝝶) {
