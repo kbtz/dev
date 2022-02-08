@@ -4,6 +4,7 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vue-tsc --noEmit && vite build",
+		"build-icons": "./env/icons/build.bash",
 		"preview": "vite preview"
 	},
 	"dependencies": {
