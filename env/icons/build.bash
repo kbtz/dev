@@ -19,21 +19,6 @@ set +e
 cd ${SET}
 set -e
 
-cat <<JSON > svgo.config.json
-{
-	"plugins": [
-		{
-			"name": "preset-default",
-			"params": {
-				"overrides": {
-					"removeViewBox": false
-				}
-			}
-		}
-	]
-}
-JSON
-
 svgo \
 	--folder . \
 	--precision 0 \
@@ -44,7 +29,7 @@ svgo \
 node <<JS > ${OUT}
 const
 	body = {
-		viewBox: $(sed -nE 's,.*viewBox=("[^"]*").*,\1,p' ${SRC}),
+		viewBox: $(sed -nE 's,.*viewBox="0 0 ([^"]*)".*,"\1",p' ${SRC}),
 		paths: {
 			$(for ICON in *.svg; do
 				echo ${ICON%.*}: [ \
