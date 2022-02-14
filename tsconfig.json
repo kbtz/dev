@@ -33,8 +33,7 @@
 		]
 	},
 	"include": [
-		"env/*.d.ts",
-		"env/*.ts",
+		"env/type/*.ts",
 		"src/**/*.ts",
 		"src/**/*.tsx",
 		"src/**/*.vue"

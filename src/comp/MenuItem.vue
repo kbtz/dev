@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, inject, provide } from 'vue';
+import Icon from '<Icon.vue'
 import vPlace from '-place'
 
 interface Container {
@@ -14,6 +15,7 @@ interface Parent {
 }
 
 const props = defineProps<{
+	icon: 𝞁
 	center?: [𝝶, 𝝶]
 	size?: 𝝶
 	anchor?: 𝝶
@@ -29,7 +31,8 @@ const self = computed(() => {
 		{ gap, unit, origin } = container,
 		attach = props.anchor != undefined
 
-	let { size = 1, align = 0 } = props,
+	let
+		{ size = 1, align = 0 } = props,
 		center: 𝝣<𝝶>
 
 	size *= unit
@@ -44,7 +47,7 @@ const self = computed(() => {
 		center = parent.center.slice()
 		center['+'] = translation
 		if (align) {
-			const alignment = (parent.size - size) / 4 * align
+			const alignment = (parent.size / 2 - size / 2) / 2 * align
 			center['+'] = (angle + 90).vec.map(v => v * alignment)
 		}
 	} else {
@@ -59,7 +62,9 @@ provide('parent', self)
 </script>
 
 <template>
-	<li v-place="self"></li>
+	<li v-place="self">
+		<Icon :icon="(props.icon as 𝞌)" />
+	</li>
 	<slot></slot>
 </template>
 
@@ -68,14 +73,17 @@ body > menu > li {
 	list-style: none;
 	position: absolute;
 	background: var(--light);
+	color: var(--dark);
+	box-sizing: border-box;
 
-	mask-image: url("/hex.png");
+	mask-image: url("/hex.svg");
 	mask-size: contain;
-	-webkit-mask-image: url("/hex.png");
+	-webkit-mask-image: url("/hex.svg");
 	-webkit-mask-size: cover;
+	clip-path: polygon(28% 8%, 72% 8%, 100% 50%, 72% 92%, 28% 92%, 0% 50%);
 
 	&:hover {
-		background-color: aquamarine;
+		opacity: 0.9;
 	}
 }
 </style>

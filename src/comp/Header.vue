@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import logo from '#logo.png'
 import Type from '<Type.vue'
 import { ref, watch } from 'vue';
 
@@ -21,7 +20,7 @@ watch(state.track.cover, (closing) => {
 <template>
 	<header>
 		<Type :text="left" />
-		<img :src="logo" @click="state.cover = true" />
+		<img src="/logo.svg" @click="state.cover = true" />
 		<Type :text="right" />
 	</header>
 </template>
@@ -39,6 +38,7 @@ header {
 
 	span {
 		font-size: 80px;
+		font-weight: 600;
 		flex-basis: 30%;
 		flex-grow: 1;
 

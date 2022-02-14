@@ -4,14 +4,13 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 import backdrop from '|backdrop'
 import vPage from '-page'
 import shaders from '#shaders.glsl?raw'
-import logo from '#logo.gif'
 
 const canvas = ref()
 
 onMounted(() => {
 	backdrop.is.done = false
 	backdrop.init(canvas.value, shaders)
-	backdrop.icon = logo
+	backdrop.icon = '/logo.svg'
 })
 
 onUnmounted(() => {

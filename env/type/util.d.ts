@@ -5,7 +5,7 @@ interface Object {
 	[𝞃]: Dict<OSet>
 	[𝝠]: Dict<𝝺>
 	[k: 𝞁]: 𝞌 | undefined
-	map<T>(this: T, f: 𝝺): T
+	map<T>(this: T, f: 𝝺): T & 𝝷
 }
 
 type Dict<T = 𝞌, K extends 𝞁 = 𝞁> =
@@ -24,13 +24,18 @@ interface ProxyConstructor {
 }
 
 interface Number {
-	vec: 𝝣<𝝶>
+	up: 𝝶
 	px: 𝞁
+	int: 𝝶
+	vec: 𝝣<𝝶>
+	dice: 𝝶
+	random: 𝝶
 	between: (min: 𝝶, max: 𝝶, inclusive?: 𝝱) => 𝝱
 }
 
 interface Function {
 	after: (seconds: 𝝶, ...a: 𝞌[]) => 𝝶
+	every: (seconds: 𝝶, ...a: 𝞌[]) => 𝝶
 	debounce: (seconds: 𝝶, ...a: 𝞌[]) => 𝝶
 	hold: 𝝶
 }
