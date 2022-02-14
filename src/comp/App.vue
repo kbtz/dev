@@ -3,6 +3,7 @@ import Backdrop from '<Backdrop.vue';
 import Header from '<Header.vue';
 import Menu from '<Menu.vue';
 import Main from '<Main.vue'
+import Footer from '<Footer.vue';
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import Main from '<Main.vue'
 	<Header />
 	<Menu />
 	<Main />
+	<Footer />
 </template>
 
 <style lang="scss">
@@ -28,7 +30,7 @@ body {
 canvas {
 	z-index: 11;
 	grid-area: 1 / 1 / -1 / -1;
-	display: none;
+	// display: none;
 }
 
 header {
@@ -36,12 +38,16 @@ header {
 }
 
 menu {
-	grid-area: 4 / 3 / 5 / -3;
+	grid-area: 4 / 3 / 6 / -3;
 }
 
 main {
 	grid-area: 1 / 3 / -1 / -3;
 	display: none;
+}
+
+footer {
+	grid-area: 6 / 3 / 7 / -3;
 }
 
 cursor {
