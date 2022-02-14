@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, inject, provide } from 'vue';
-import Icon from '<Icon.vue'
 import vPlace from '-place'
+import Icon from '<Icon.vue'
 
 interface Container {
 	origin: 𝝣<𝝶>
@@ -45,14 +45,14 @@ const self = computed(() => {
 			translation = angle.vec.map(v => v * distance)
 
 		center = parent.center.slice()
-		center['+'] = translation
+		center.add(translation)
 		if (align) {
 			const alignment = (parent.size / 2 - size / 2) / 2 * align
-			center['+'] = (angle + 90).vec.map(v => v * alignment)
+			center.add((angle + 90).vec.map(v => v * alignment))
 		}
 	} else {
 		center = props.center?.map(v => v * unit) || [0, 0]
-		center['+'] = origin
+		center.add(origin)
 	}
 
 	return { center, size }
@@ -77,7 +77,7 @@ body > menu > li {
 	box-sizing: border-box;
 
 	mask-image: url("/hex.svg");
-	mask-size: contain;
+	mask-size: cover;
 	-webkit-mask-image: url("/hex.svg");
 	-webkit-mask-size: cover;
 	clip-path: polygon(28% 8%, 72% 8%, 100% 50%, 72% 92%, 28% 92%, 0% 50%);

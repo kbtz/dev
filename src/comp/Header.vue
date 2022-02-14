@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import Type from '<Type.vue'
 import { ref, watch } from 'vue';
+import Type from '<Type.vue'
 
 const
 	left = ref('K'),

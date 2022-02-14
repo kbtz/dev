@@ -44,11 +44,14 @@ interface Array<T> {
 	[𝝹]: 𝝶[]
 	[𝝼]: T[]
 	[𝝹𝝼]: KVP<𝝶, T>
+	add: (v: 𝝣<𝝶> | 𝝶) => T[]
+	sub: (v: 𝝣<𝝶> | 𝝶) => T[]
+	amp: (v: 𝝣<𝝶> | 𝝶) => T[]
+	div: (v: 𝝣<𝝶> | 𝝶) => T[]
 	has: (word: 𝞁) => 𝝱
-	each: Array<T>['forEach']
-	make: (maker: (...a: 𝞌[]) => T) => T[]
 	pick: T
-	'+': 𝝣<𝝶> | 𝝶
+	each: Array<T>['forEach']
+	make: <R>(maker: (index: 𝝶) => R) => R[]
 }
 
 interface String {

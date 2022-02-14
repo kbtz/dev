@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { watch, reactive, onMounted } from "vue"
+import ThemeIcon from '<ThemeIcon.vue'
+
 const
 	{ style } = document.documentElement,
 	theme = reactive({
@@ -17,21 +19,19 @@ watch(theme, () => {
 
 function shuffle() {
 	theme.sepia = (1).dice
+	theme.invert = (1).dice
 	if (theme.sepia) {
-		theme.invert = 0
 		theme.saturate = 1 + (4).dice
 		theme['hue-rotate'] = 10 * (36).dice + 'deg'
-	} else {
-		theme.invert = (1).dice
 	}
 }
 
 onMounted(shuffle)
-shuffle.every(2)
+shuffle.every(5)
 </script>
 
 <template>
-	<button @click="shuffle">eee</button>
+	<ThemeIcon @click="shuffle" />
 </template>
 
 <style>

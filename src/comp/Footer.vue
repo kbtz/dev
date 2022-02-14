@@ -9,9 +9,15 @@ import Theme from '<Theme.vue';
 </template>
 
 <style lang="scss">
+$size: 128px;
 footer {
 	display: flex;
-	align-self: flex-end;
+	align-self: center;
 	justify-content: center;
+
+	.icon {
+		width: $size;
+		height: $size;
+	}
 }
 </style>
