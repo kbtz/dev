@@ -6,6 +6,7 @@ interface Object {
 	[𝝠]: Dict<𝝺>
 	[k: 𝞁]: 𝞌 | undefined
 	map<T>(this: T, f: 𝝺): T & 𝝷
+	reduce<T, R>(this: T, f: (...a: 𝞌[]) => R, acc?: R): R
 }
 
 type Dict<T = 𝞌, K extends 𝞁 = 𝞁> =

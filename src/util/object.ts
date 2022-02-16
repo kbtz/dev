@@ -30,3 +30,10 @@ Object[𝝠].map = function <T extends Dict>(this: T, f: 𝝺) {
 
 	return res as T
 }
+
+Object[𝝠].reduce = function <T extends Dict>(this: T, f: 𝝺, acc: 𝞌) {
+	for (const [k, v] of this[𝝹𝝼]!)
+		acc = f(acc, v, k, this)
+
+	return acc
+}

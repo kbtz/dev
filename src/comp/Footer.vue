@@ -16,8 +16,9 @@ footer {
 	justify-content: center;
 
 	.icon {
-		width: $size;
-		height: $size;
+		--size: 128px;
+		width: var(--size);
+		height: var(--size);
 	}
 }
 </style>

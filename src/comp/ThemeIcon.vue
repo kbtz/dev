@@ -1,81 +1,73 @@
 <script lang="ts" setup>
 import { reactive, watch } from 'vue';
+import { ThemeMode } from '<Theme.vue'
 
 const
-	size = 512, center = size / 2,
-	padding = size * .1,
-	radius = size / 2 - padding,
-	state = reactive<{
-		open: 𝝱
-		mode: 'dark' | 'light' | 'color' | 'selector'
-	}>({
-		open: false,
-		mode: 'dark',
-	}),
-	path = reactive({
-		star: star(),
-		handle: handle()
-	})
-
-function star() {
-	const
-		{ open, mode } = state,
-		count = 8, offset = +open * (180 + 30),
-		clip = (open ? padding * .8 : radius - padding * 1.6).int
-
-	const points = [1 + count * 2].make(idx =>
-		(offset / 2 + ((360 - offset) / (count * 2) * idx))
-			.vec.amp(idx % 2 ? radius : radius - padding * .9)
+	size = 512, pad = 32, center = size / 2,
+	count = 10, step = 360 / (count * 2),
+	radius = center - pad,
+	clip = (radius - pad * 3).int,
+	dot = (clip * .7).int,
+	star = [1 + count * 2].make(
+		idx => (step * idx)
+			.vec.amp(idx % 2 ? radius - pad * 1.5 : radius)
 			.map(v => v.int).join(',')
-	)
+	),
+	{ mode } = defineProps<{
+		mode: ThemeMode
+	}>()
 
-	return `
-		M ${points[0]}
-		L ${points.slice(1).join(' L')}
-		L ${points[0]}
-		Z
-
-		M ${clip},0
-		a ${clip},${clip} 0 1,0 ${clip * -2},0
-		a ${clip},${clip} 0 1,0 ${clip * +2},0
-		Z
-	`
+function toggle() {
+	mode.bright = !mode.bright
 }
-
-function handle() {
-	return ''
-}
-
-watch(state, () => {
-	path.star = star()
-	path.handle = handle()
-})
-
-	; (() => {
-		state.open = !state.open
-	}).every(5)
 </script>
 
 <template>
-	<svg :viewBox="`0 0 ${size} ${size}`" class="icon icon-theme">
-		<g :transform="` translate(${center} ${center}) rotate(-90)`">
-			<path :d="path.star" />
-			<g>
-				<path :d="path.handle" />
+	<svg :viewBox="`0 0 ${size} ${size}`" class="icon icon-theme" @click="toggle">
+		<g :transform="` translate(${center} ${center})`">
+			<defs>
+				<rect id="th-rect" :x="-center" :y="-center" :width="size" :height="size" />
+				<circle id="th-circle" cx="0" cy="0" :r="clip" />
+				<clipPath id="th-clip">
+					<use href="#th-circle" transform="translate(-16 0)" />
+				</clipPath>
+				<mask id="th-mask">
+					<use href="#th-rect" fill="white" />
+					<use href="#th-circle" fill="black" />
+				</mask>
+			</defs>
+			<g class="icon-theme-shapes">
+				<path
+					mask="url(#th-mask)"
+					:d="`M ${star[0]} L ${star.slice(1).join(' L')} L ${star[0]} Z`"
+					:transform="`rotate(${mode.bright ? 36 * 3 : 0})`"
+				/>
+				<g clip-path="url(#th-clip)">
+					<circle
+						cx="0"
+						cy="0"
+						:r="dot"
+						:transform="`translate(${mode.bright ? 0 : -dot} 0) scale(${mode.bright ? 1 : 1.4})`"
+					/>
+				</g>
 			</g>
 		</g>
 	</svg>
 </template>
 
-<style scoped>
-svg {
-	outline: 1px solid grey;
-}
+<style lang="scss" >
+$t: 0.6s;
 
-path {
-	fill: var(--light);
-	fill: #888;
-	fill-rule: evenodd;
-	transition: d 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.icon-theme {
+	outline: 1px solid grey;
+
+	&-shapes {
+		path,
+		circle {
+			fill: var(--light);
+			fill-rule: evenodd;
+			transition: transform $t cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		}
+	}
 }
 </style>

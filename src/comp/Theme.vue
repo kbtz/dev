@@ -2,36 +2,37 @@
 import { watch, reactive, onMounted } from "vue"
 import ThemeIcon from '<ThemeIcon.vue'
 
-const
-	{ style } = document.documentElement,
-	theme = reactive({
-		invert: 0,
-		sepia: 0,
-		saturate: 0,
-		'hue-rotate': '0'
-	})
-
-watch(theme, () => {
-	style.filter = theme
-		.map((v, k) => `${k}(${v})`)[𝝼]
-		.join(' ')
-})
-
-function shuffle() {
-	theme.sepia = (1).dice
-	theme.invert = (1).dice
-	if (theme.sepia) {
-		theme.saturate = 1 + (4).dice
-		theme['hue-rotate'] = 10 * (36).dice + 'deg'
-	}
+export type ThemeMode = {
+	bright: 𝝱
+	saturate: 𝝶
+	hue: 𝝶
 }
 
-onMounted(shuffle)
-shuffle.every(5)
+const
+	{ style } = document.documentElement,
+	mode = reactive<ThemeMode>({
+		bright: false,
+		saturate: 0,
+		hue: 0
+	})
+
+watch(mode, ({ bright, saturate, hue }) => {
+	style.filter = ({
+		invert: +bright,
+		sepia: +(!!saturate),
+		saturate, hue
+	}).reduce((a = '', v, k) => a +
+		(k == 'hue'
+			? `${k}-rotate(${v}deg) `
+			: `${k}(${v}) `))
+})
+
+//onMounted(() => mode.bright = true)
 </script>
 
 <template>
-	<ThemeIcon @click="shuffle" />
+	<ThemeIcon :mode="mode" />
+	<ThemeIcon :mode="mode" style="--size:32px" />
 </template>
 
 <style>
