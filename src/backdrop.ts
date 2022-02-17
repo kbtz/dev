@@ -35,7 +35,7 @@ function init(target: HTMLCanvasElement, shaders: string) {
 
 	gl.uniforms = { S }
 	main.uniforms = { ping: '0', pong: '1' }
-	grid.uniforms = { self: '2', icon: '3', Wc: 0, Wt: -10 }
+	grid.uniforms = { self: '2', icon: '3', Wc: 1, Wt: 0.1 }
 
 	resize(), redraw()
 	intro.after(1)
@@ -82,12 +82,12 @@ function resize() {
 function mousemove({ pageX: x, pageY: y }: MouseEvent) {
 	gl.uniforms.M = [x / w, (h - y) / h]
 	const [key] = gl.read()
-	state.pointer = cover && key > 10
+	state.pointer = state.cover && key > 10
 	is.paused = false
 }
 
 function click() {
-	if (is.ready && cover && pointer)
+	if (is.ready && state.cover && state.pointer)
 		state.cover = false
 }
 
