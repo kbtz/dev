@@ -6,8 +6,8 @@ const
 	left = ref('K'),
 	right = ref('D')
 
-watch(state.track.cover, (closing) => {
-	if (!closing) {
+watch(state.backdrop, ({ cover }) => {
+	if (!cover) {
 		left.value = 'kbtz'
 		after(.2, () => right.value = 'dev')
 	} else {
@@ -20,7 +20,7 @@ watch(state.track.cover, (closing) => {
 <template>
 	<header>
 		<Type :text="left" />
-		<img src="/logo.svg" @click="state.cover = true" />
+		<img src="/logo.svg" @click="state.backdrop.cover = true" />
 		<Type :text="right" />
 	</header>
 </template>

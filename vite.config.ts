@@ -10,11 +10,11 @@ export default defineConfig({
 	publicDir: 'pub',
 	resolve: {
 		alias: [
+			{ find: /^\|(.*)$/, replacement: '/src/$1.ts' },
 			{ find: /^\+(.*)$/, replacement: '/src/util/$1.ts' },
 			{ find: /^<(.*)$/, replacement: '/src/comp/$1' },
 			{ find: /^-(.*)$/, replacement: '/src/attr/$1.ts' },
 			{ find: /^#(.*)$/, replacement: '/src/file/$1' },
-			{ find: /^\|(.*)$/, replacement: '/src/$1.ts' },
 		]
 	},
 	plugins: [

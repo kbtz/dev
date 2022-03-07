@@ -17,10 +17,8 @@ function animate(next: 𝞁, invalidate: 𝝺) {
 	const
 		t = .15, d = t * text.length, chars = text.chars,
 		char = () => chars.pick,
-		bump = every(t / 3, () => {
-			mask.value = Array.from(new Array(size), char).join('')
-			if (!mask.value.length) debugger
-		}),
+		bump = every(t / 3, () => mask.value =
+			''.concat(...[size].make(char))),
 		grow = every(t, () => size += rev ? -1 : 1),
 		done = after(d, () => mask.value = next),
 		cancel = () => [bump, grow, done].each(clearInterval)

@@ -5,8 +5,10 @@ interface Object {
 	[𝞃]: Dict<OSet>
 	[𝝠]: Dict<𝝺>
 	[k: 𝞁]: 𝞌 | undefined
+	str: 𝞁
 	map<T>(this: T, f: 𝝺): T & 𝝷
 	reduce<T, R>(this: T, f: (...a: 𝞌[]) => R, acc?: R): R
+	concat<T>(this: T, f: 𝝺): 𝞁
 }
 
 type Dict<T = 𝞌, K extends 𝞁 = 𝞁> =
@@ -28,10 +30,12 @@ interface Number {
 	up: 𝝶
 	px: 𝞁
 	int: 𝝶
+	abs: 𝝶
 	vec: 𝝣<𝝶>
 	dice: 𝝶
 	random: 𝝶
 	between: (min: 𝝶, max: 𝝶, inclusive?: 𝝱) => 𝝱
+	clamp: (from: 𝝶, to: 𝝶) => 𝝶
 }
 
 interface Function {
@@ -52,13 +56,21 @@ interface Array<T> {
 	has: (word: 𝞁) => 𝝱
 	pick: T
 	each: Array<T>['forEach']
-	make: <R>(maker: (index: 𝝶) => R) => R[]
+	make(): null[]
+	make<R>(maker: (index: 𝝶) => R): R[]
 }
 
 interface String {
 	in: (words: 𝞁[]) => 𝝱
 	chars: 𝞁[]
 	words: 𝞁[]
+}
+
+interface Element {
+	on: typeof HTMLElement.prototype.addEventListener
+	off: typeof HTMLElement.prototype.removeEventListener
+	xy: 𝝶[]
+	center: 𝝶[]
 }
 
 interface Window {

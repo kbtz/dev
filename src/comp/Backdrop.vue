@@ -18,8 +18,9 @@ onUnmounted(() => {
 	backdrop.is.done = true
 })
 
-watch(state.track.cover, closing => {
-	if (closing) backdrop.close()
+watch(state.backdrop, ({ cover }) => {
+	return
+	if (cover) backdrop.close()
 	else backdrop.open()
 })
 </script>

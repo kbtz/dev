@@ -1,11 +1,3 @@
-window[𝞀].size = function (this: Window) {
-	const { innerWidth: width, innerHeight: height } = this
-	return { width, height }
-}
-
-window.on = window.addEventListener.bind(window)
-window.off = window.removeEventListener.bind(window)
-
 export class Context {
 	constructor(context: 𝝷) {
 		let base = (<𝞌>this).__proto__ as Dict<𝝺>

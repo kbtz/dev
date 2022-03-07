@@ -1,13 +1,19 @@
 const {
 	PI, cos, sin,
-	random, round, ceil
+	random, round, ceil,
+	abs, min, max,
 } = Math
 
 Number[𝞀].vec = function (this: 𝝶) {
 	const
 		rad = this / 180 * PI,
 		x = cos(rad), y = sin(rad)
+
 	return [x, y]
+}
+
+Number[𝞀].abs = function (this: 𝝶) {
+	return abs(this)
 }
 
 Number[𝞀].int = function (this: 𝝶) {
@@ -28,6 +34,10 @@ Number[𝞀].dice = function (this: 𝝶) {
 
 Number[𝞀].random = function (this: 𝝶) {
 	return random() * this
+}
+
+Number[𝝠].clamp = function (this: 𝝶, from: 𝝶, to: 𝝶) {
+	return max(from, min(to, this))
 }
 
 Number[𝝠].between = function (this: 𝝶, min: 𝝶, max: 𝝶, inclusive = true) {

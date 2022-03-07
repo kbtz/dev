@@ -5,7 +5,7 @@ Array[𝝠].has = function (this: 𝞌[], word: 𝞁) {
 }
 
 Array[𝝠].make = function <T>(this: [𝝶], maker: (...a: 𝞌[]) => T): T[] {
-	return [...Array(this[0]).keys()].map(maker)
+	return [...Array(this[0]).keys()].map(maker || (() => null))
 }
 
 Array[𝞀].pick = function <T>(this: T[]): T {

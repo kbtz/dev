@@ -1,15 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;600&display=swap');
-$dark: #111;
-$light: #EEE;
 
 :root {
-	--dark: #{$dark};
-	--light: #{$light};
+	--dark: #111;
+	--light: #EEE;
+}
+
+html {
+	will-change: filter;
+	transition: filter 1s ease-out;
 }
 
 body {
-	background: $dark;
-	color: $light;
+	background: var(--dark);
+	color: var(--light);
 	font-family: "Fira Code", monospace;
 	user-select: none;
 	-webkit-font-smoothing: antialiased;

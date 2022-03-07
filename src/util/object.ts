@@ -1,3 +1,4 @@
+
 Object[𝞀][𝝹] = function (this: 𝝷) {
 	return Reflect.ownKeys(this)
 } as 𝞌
@@ -22,6 +23,10 @@ Object[𝞃][𝞏] = function (target: 𝝷) {
 	return true
 }
 
+Object[𝞀].str = function (this: 𝝷) {
+	return this.toString()
+} as 𝞌
+
 Object[𝝠].map = function <T extends Dict>(this: T, f: 𝝺) {
 	let res = {} as Dict
 
@@ -33,7 +38,10 @@ Object[𝝠].map = function <T extends Dict>(this: T, f: 𝝺) {
 
 Object[𝝠].reduce = function <T extends Dict>(this: T, f: 𝝺, acc: 𝞌) {
 	for (const [k, v] of this[𝝹𝝼]!)
-		acc = f(acc, v, k, this)
-
+		acc = f(acc, k, v, this)
 	return acc
+}
+
+Object[𝝠].concat = function <T extends Dict>(this: T, f: 𝝺) {
+	return ''.concat(...this[𝝹𝝼]!.map(f))
 }
