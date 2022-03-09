@@ -63,7 +63,7 @@ function change(x: 𝝶, y: 𝝶) {
 
 	const
 		{ PI, atan2, sin, cos } = Math,
-		delta = (((x ** 2 + y ** 2) ** .5).clamp(24, 256) / 48).up * 48,
+		delta = (((x ** 2 + y ** 2) ** .5).clamp(24, 256) / 48).up * 48 * 4,
 		arct = (atan2(y, x) * 180 / PI).int,
 		angle = ((90 - arct.clamp(30, 150)) / 15).up * 15,
 		rad = angle / 180 * PI
@@ -101,7 +101,7 @@ function change(x: 𝝶, y: 𝝶) {
 					<use
 						href="#th-circle"
 						fill="black"
-						:transform="`scale(${open ? 1.8 : 1}) translate(0 ${open ? dot * -.9 : 0})`"
+						:transform="`scale(${open ? 1.8 : 1}) translate(0 ${open ? dot * -.85 : 0})`"
 					/>
 				</mask>
 			</defs>

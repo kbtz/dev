@@ -1,4 +1,3 @@
-
 Object[𝞀][𝝹] = function (this: 𝝷) {
 	return Reflect.ownKeys(this)
 } as 𝞌
@@ -21,6 +20,14 @@ Object[𝞃][𝞈] = function (target: 𝝷) {
 Object[𝞃][𝞏] = function (target: 𝝷) {
 	Object.assign(this, target)
 	return true
+}
+
+Object[𝞀].bond = function (this: 𝝷) {
+	return Proxy.reader(k => {
+		if (typeof this[k] == 'function') {
+			return this[k].bind(this)
+		}
+	})
 }
 
 Object[𝞀].str = function (this: 𝝷) {

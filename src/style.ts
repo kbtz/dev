@@ -2,7 +2,8 @@ import '#main.scss'
 import { watch } from "vue"
 
 const { style } = document.documentElement
-watch(state.theme, ({ bright, saturate, hue }) => {
+
+function apply({ bright, saturate, hue }: typeof state.theme) {
 	style.filter = ({
 		invert: +bright,
 		sepia: +(!!saturate),
@@ -11,4 +12,7 @@ watch(state.theme, ({ bright, saturate, hue }) => {
 		k == 'hue'
 			? `${k}-rotate(${v}deg) `
 			: `${k}(${v}) `)
-})
+}
+
+watch(state.theme, apply)
+apply(state.theme)

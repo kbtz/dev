@@ -1,5 +1,6 @@
 import '+base'
 import '|state'
+import '|store'
 import '|style'
 
 import { createApp } from 'vue'
