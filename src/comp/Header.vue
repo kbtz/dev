@@ -30,7 +30,6 @@ header {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	filter: blur(1.5px);
 
 	img {
 		max-height: 128px;

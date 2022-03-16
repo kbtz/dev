@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Pointer from '<Pointer.vue';
 import Backdrop from '<Backdrop.vue';
 import Header from '<Header.vue';
 import Menu from '<Menu.vue';
@@ -7,11 +8,12 @@ import Footer from '<Footer.vue';
 </script>
 
 <template>
-	<Backdrop />
 	<Header />
 	<Menu />
 	<Main />
 	<Footer />
+	<Backdrop />
+	<Pointer />
 </template>
 
 <style lang="scss">
@@ -27,9 +29,16 @@ body {
 	overflow: hidden;
 }
 
-canvas {
-	z-index: 11;
+.pointer {
 	grid-area: 1 / 1 / -1 / -1;
+	z-index: 12;
+	pointer-events: none;
+}
+
+canvas {
+	grid-area: 1 / 1 / -1 / -1;
+	z-index: 11;
+	pointer-events: none;
 	// display: none;
 }
 
@@ -50,7 +59,7 @@ footer {
 	grid-area: 6 / 3 / 7 / -3;
 }
 
-cursor {
+.pointer {
 	z-index: 12;
 }
 </style>

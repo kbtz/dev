@@ -28,9 +28,3 @@ watch(state.backdrop, ({ cover }) => {
 <template>
 	<canvas ref="canvas" v-page="backdrop.events" />
 </template>
-
-<style>
-canvas {
-	pointer-events: none;
-}
-</style>

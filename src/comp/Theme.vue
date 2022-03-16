@@ -65,7 +65,7 @@ function change(x: 𝝶, y: 𝝶) {
 		{ PI, atan2, sin, cos } = Math,
 		delta = (((x ** 2 + y ** 2) ** .5).clamp(24, 256) / 48).up * 48 * 4,
 		arct = (atan2(y, x) * 180 / PI).int,
-		angle = ((90 - arct.clamp(30, 150)) / 15).up * 15,
+		angle = ((90 - arct.clamp(32, 148)) / 4).up * 4,
 		rad = angle / 180 * PI
 
 	theme.saturate = (delta - 48) / 48
@@ -142,7 +142,6 @@ function change(x: 𝝶, y: 𝝶) {
 
 <style lang="scss">
 $time: 0.6s;
-$ease: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
 .icon-theme {
 	g,
@@ -164,7 +163,7 @@ $ease: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 		circle {
 			fill: var(--light);
 			fill-rule: evenodd;
-			transition: transform $time $ease;
+			transition: transform $time var(--bounce);
 		}
 	}
 
@@ -182,7 +181,7 @@ $ease: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 			stroke: var(--light);
 			stroke-width: 32pt;
 			transform: translate(0, 15%);
-			transition: transform calc(#{$time} / 2) $ease;
+			transition: transform calc(#{$time} / 2) var(--bounce);
 		}
 	}
 

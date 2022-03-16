@@ -1,22 +1,21 @@
 <script lang="ts" setup>
 import { computed, inject, provide } from 'vue';
-import vPlace from '-place'
 import Icon from '<Icon.vue'
 
 interface Container {
-	origin: 𝝣<𝝶>
+	origin: Point
 	unit: 𝝶
 	gap: 𝝶
 }
 
 interface Parent {
-	center: 𝝣<𝝶>
+	center: Point
 	size: 𝝶
 }
 
 const props = defineProps<{
 	icon: 𝞁
-	center?: [𝝶, 𝝶]
+	center?: Point
 	size?: 𝝶
 	anchor?: 𝝶
 	align?: 𝝶
@@ -33,9 +32,9 @@ const self = computed(() => {
 
 	let
 		{ size = 1, align = 0 } = props,
-		center: 𝝣<𝝶>
+		center: Point
 
-	size *= unit
+	size = (size * unit).abs
 
 	if (attach) {
 		const
@@ -44,14 +43,15 @@ const self = computed(() => {
 			angle = (30 + props.anchor! * 60),
 			translation = angle.vec.map(v => v * distance)
 
-		center = parent.center.slice()
+		center = parent.center.slice() as Point
 		center.add(translation)
 		if (align) {
 			const alignment = (parent.size / 2 - size / 2) / 2 * align
 			center.add((angle + 90).vec.map(v => v * alignment))
 		}
 	} else {
-		center = props.center?.map(v => v * unit) || [0, 0]
+		center = props.center?.map(v => v * unit) as Point
+		center ||= [0, 0]
 		center.add(origin)
 	}
 
@@ -62,10 +62,10 @@ provide('parent', self)
 </script>
 
 <template>
-	<li v-place="self">
+	<li :style="`--size: ${self.size}px; left: ${self.center[0]}px; top: ${self.center[1]}px;`">
 		<Icon :icon="(props.icon as 𝞌)" />
 	</li>
-	<slot></slot>
+	<slot />
 </template>
 
 <style lang="scss">
@@ -81,6 +81,11 @@ body > menu > li {
 	-webkit-mask-image: url("/hex.svg");
 	-webkit-mask-size: cover;
 	clip-path: polygon(28% 8%, 72% 8%, 100% 50%, 72% 92%, 28% 92%, 0% 50%);
+	padding: calc(var(--size) * 0.2);
+	width: var(--size);
+	height: var(--size);
+	margin-top: calc(var(--size) * -0.5);
+	margin-left: calc(var(--size) * -0.5);
 
 	&:hover {
 		opacity: 0.9;

@@ -70,8 +70,8 @@ function resize() {
 	h = window.size.height
 
 	const
-		R = [w, h] as [𝝶, 𝝶],
-		G = R.map(R2G) as [𝝶, 𝝶]
+		R = [w, h] as Point,
+		G = R.map(R2G) as Point
 
 	main.size = R, grid.size = G
 	ping.update(G), pong.update(G)

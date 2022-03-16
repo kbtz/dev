@@ -240,14 +240,14 @@ export interface Program {
 	name: 𝞁
 	uniforms: 𝝷
 	locations: 𝝷
-	size: [𝝶, 𝝶]
+	size: Point
 	fbo?: Framebuffer
 }
 
 export interface Texture {
 	index: 𝝶
 	bind: (index: 𝝶) => void
-	update: (size: [𝝶, 𝝶], data?: 𝞌) => void
+	update: (size: Point, data?: 𝞌) => void
 }
 
 export interface Framebuffer {

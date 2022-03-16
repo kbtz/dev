@@ -24,10 +24,6 @@ Number[𝞀].up = function (this: 𝝶) {
 	return ceil(this)
 }
 
-Number[𝞀].px = function (this: 𝝶) {
-	return `${this}px`
-}
-
 Number[𝞀].dice = function (this: 𝝶) {
 	return round(random() * this)
 }

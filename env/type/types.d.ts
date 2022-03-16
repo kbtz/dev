@@ -19,7 +19,7 @@ type OGet<V = 𝞌> = () => V
 
 type HTMLEventName = keyof HTMLElementEventMap
 type WindowEventName = keyof WindowEventMap
-type Point = { x: 𝝶, y: 𝝶 }
+type Point = [𝝶, 𝝶]
 
 type Constructor<T = 𝝷> = {
 	new(...args: 𝞌[]): T & {};

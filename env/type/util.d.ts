@@ -29,7 +29,6 @@ interface ProxyConstructor {
 
 interface Number {
 	up: 𝝶
-	px: 𝞁
 	int: 𝝶
 	abs: 𝝶
 	vec: 𝝣<𝝶>
