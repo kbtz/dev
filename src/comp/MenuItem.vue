@@ -11,6 +11,8 @@ interface Container {
 interface Parent {
 	center: Point
 	size: 𝝶
+	group: 𝞁
+	index: 𝝶
 }
 
 const props = defineProps<{
@@ -19,6 +21,7 @@ const props = defineProps<{
 	size?: 𝝶
 	anchor?: 𝝶
 	align?: 𝝶
+	group?: 𝞁
 }>()
 
 const
@@ -31,8 +34,8 @@ const self = computed(() => {
 		attach = props.anchor != undefined
 
 	let
-		{ size = 1, align = 0 } = props,
-		center: Point
+		{ size = 1, align = 0, group } = props,
+		index = 0, center: Point
 
 	size = (size * unit).abs
 
@@ -49,27 +52,31 @@ const self = computed(() => {
 			const alignment = (parent.size / 2 - size / 2) / 2 * align
 			center.add((angle + 90).vec.map(v => v * alignment))
 		}
+
+		group = parent.group
+		index = parent.index + 1
 	} else {
 		center = props.center?.map(v => v * unit) as Point
 		center ||= [0, 0]
 		center.add(origin)
 	}
 
-	return { center, size }
+	return { center, size, group, index }
 })
 
 provide('parent', self)
 </script>
 
 <template>
-	<li :style="`--size: ${self.size}px; left: ${self.center[0]}px; top: ${self.center[1]}px;`">
+	<li class="focusable menu-item" :class="`menu-item--${props.icon} menu-item--${self.group}`"
+		:style="`--index: ${self.index}; --size: ${self.size}px; left: ${self.center[0]}px; top: ${self.center[1]}px;`">
 		<Icon :icon="(props.icon as 𝞌)" />
 	</li>
 	<slot />
 </template>
 
 <style lang="scss">
-body > menu > li {
+body>menu>li {
 	list-style: none;
 	position: absolute;
 	background: var(--light);
@@ -87,8 +94,8 @@ body > menu > li {
 	margin-top: calc(var(--size) * -0.5);
 	margin-left: calc(var(--size) * -0.5);
 
-	&:hover {
-		opacity: 0.9;
+	.icon {
+		pointer-events: none;
 	}
 }
 </style>

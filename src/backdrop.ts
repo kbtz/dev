@@ -12,6 +12,7 @@ let
 	}
 
 const
+	{ backdrop } = state,
 	S = tile, frame = requestAnimationFrame,
 	R2G = (v: 𝝶, i: 𝝶) => Math.ceil(v / S * (i + 1))
 
@@ -35,7 +36,7 @@ function init(target: HTMLCanvasElement, shaders: string) {
 
 	gl.uniforms = { S }
 	main.uniforms = { ping: '0', pong: '1' }
-	grid.uniforms = { self: '2', icon: '3', Wc: 1, Wt: 0.1 }
+	grid.uniforms = { self: '2', icon: '3', Wc: 0, Wt: -10 }
 
 	resize(), redraw()
 	intro.after(1)
@@ -82,17 +83,17 @@ function resize() {
 function mousemove({ pageX: x, pageY: y }: MouseEvent) {
 	gl.uniforms.M = [x / w, (h - y) / h]
 	const [key] = gl.read()
-	state.pointer = state.cover && key > 10
+	state.pointer.cta = backdrop.cover && key > 10
 	is.paused = false
 }
 
 function click() {
-	if (is.ready && state.cover && state.pointer)
-		state.cover = false
+	if (is.ready && backdrop.cover && state.pointer.cta)
+		backdrop.cover = false
 }
 
 function open() {
-	state.pointer = false
+	state.pointer.cta = false
 	grid.uniforms.Wc++
 	grid.uniforms.Wt = grid.uniforms.T
 }

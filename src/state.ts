@@ -11,7 +11,7 @@ const state = reactive({
 	},
 	backdrop: {
 		cover: true,
-		intro: true,
+		intro: false,
 	},
 	pointer: {
 		cta: false,

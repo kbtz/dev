@@ -3,24 +3,36 @@ import { ref, watch } from 'vue';
 import Type from '<Type.vue'
 
 const
-	left = ref('K'),
-	right = ref('D')
+	{ backdrop } = state,
+	left = ref(''),
+	right = ref('')
 
-watch(state.backdrop, ({ cover }) => {
+watch(backdrop, ({ cover }) => {
 	if (!cover) {
+		backdrop.intro = true
 		left.value = 'kbtz'
-		after(.2, () => right.value = 'dev')
+		after(.3, () => right.value = 'dev')
+		after(2, intro)
 	} else {
-		left.value = 'K'
-		right.value = 'D'
+		left.value = right.value = ''
+		backdrop.intro = false
 	}
 })
+
+function intro() {
+	const long = 2, short = 1
+	right.value = 'web'
+	after(short, () => right.value = 'dev')
+	after(short + long, () => left.value = 'for')
+	after(short + long + short, () => left.value = 'hire')
+	after(short + long + short + long, () => left.value = 'kbtz')
+}
 </script>
 
 <template>
 	<header>
 		<Type :text="left" />
-		<img src="/logo.svg" @click="state.backdrop.cover = true" />
+		<img src="/logo.svg" @click="backdrop.cover = true" />
 		<Type :text="right" />
 	</header>
 </template>

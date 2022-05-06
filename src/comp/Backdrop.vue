@@ -19,7 +19,6 @@ onUnmounted(() => {
 })
 
 watch(state.backdrop, ({ cover }) => {
-	return
 	if (cover) backdrop.close()
 	else backdrop.open()
 })

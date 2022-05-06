@@ -43,11 +43,11 @@ canvas {
 }
 
 header {
-	grid-area: 3 / 3 / 4 / -3;
+	grid-area: 2 / 3 / 3 / -3;
 }
 
 menu {
-	grid-area: 4 / 3 / 6 / -3;
+	grid-area: 3 / 3 / 5 / -3;
 }
 
 main {

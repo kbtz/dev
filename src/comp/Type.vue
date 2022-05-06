@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-// TODO convert to directive?
 import { ref, watch } from 'vue';
 
 const
@@ -8,9 +7,11 @@ const
 	}),
 	mask = ref(props.text)
 
-watch(props, (next, _, invalidate) => animate(next.text, invalidate))
+watch(props, (next, _, invalidate) => {
+	animate(next.text, invalidate)
+})
 
-let prev: 𝞁
+let prev = ''
 function animate(next: 𝞁, invalidate: 𝝺) {
 	const rev = next.length <= 1, text = rev ? prev : next
 	let size = rev ? prev.length : 1

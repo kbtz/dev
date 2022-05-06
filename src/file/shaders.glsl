@@ -54,7 +54,7 @@ float ripple() {
 const float cT = 1., cE = 4., cSr = 64., cGr = 256.;
 float curtain(vec2 p, float a) {
 	float t = (T - Wt) / cT;
-	//if(t > 2.) return a;
+	if(t > 2.) return a;
 	
 	t = min(1., t);
 	t = pow(2., -10. * t);
@@ -97,7 +97,7 @@ vec4 tick() {
 	t.b += sign(bstep) * (l.r / 400.);
 
 	// initial fade in
-	if(T < 0.) {// < 4.) {
+	if(T < 4.) {
 		if(t.g < T / 3.)
 			t.a += .02;
 	} else
@@ -105,10 +105,11 @@ vec4 tick() {
 
 	// icon fade in/out
 	bool hover = inside(M);
+	float base = .3;
 	if(T > 2.5 && l.r > .2) {
-		if(t.r < .7 || hover)
-			t.r += .002;
-		if(t.r > .7 && !hover)
+		if(t.r < base || hover)
+			t.r += .004;
+		if(t.r > base && !hover)
 			t.r -= 0.01;
 	}
 
@@ -125,7 +126,7 @@ vec4 tick() {
 }
 
 vec4 seed() {
-	bool fadeIn = false; //T < 2.;
+	bool fadeIn = T < 2.;
 	return vec4(0., Q(F), Q(T), fadeIn ? 0. : 1.);
 }
 
