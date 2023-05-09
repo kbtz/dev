@@ -30,9 +30,10 @@
 	
 	<script type="module">
 		import '/lib/init.js'
-
-		await init('backdrop')
-		await init('intro')
+		setTimeout(async () => { 
+			await init('backdrop')
+			await init('intro')
+		}, 600)
 	</script>
 </head>
 
