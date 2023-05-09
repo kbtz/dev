@@ -119,7 +119,7 @@ void main() {
 	
 	vec3 g = vec3(c);
 	g.g*=1.2;
-	g.rb/=1.2;
+	g.rb/=1.6;
 	gl_FragColor = vec4(g, t.a);
 	
 	if(P.x < 1. && P.y < 1.)
