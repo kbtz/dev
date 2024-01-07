@@ -32,8 +32,12 @@ G.GU.S= S
 
 G.link()
 
-let pause= false
-window[𝚘𝚗].blur= ()=> pause = true
+let pause= false, hover = false
+window[𝚘𝚗].blur= ()=> {
+  pause = true
+  hover = false
+}
+
 window[𝚘𝚗].focus= ()=> pause = false
 
 const redraw= ()=> requestAnimationFrame(draw)
@@ -60,13 +64,14 @@ function draw(){
 window[𝚘𝚗].move = ({pageX: x, pageY: y}) => {
 	const [w, h]= main.U.R
 	G.GU.M= [x/w, (h-y)/h]
-	if(G.read()[0] > 100)
+  hover = G.read()[0] > 100
+	if(hover)
 		body.classList.add('logo-hover')
 	else
 		body.classList.remove('logo-hover')
 }
 
-window[𝚘𝚗].resize = debounce(300, ()=> {
+window[𝚘𝚗].resize = ()=> {
 	const [w,h,i,j] = R()
 	
 	E.width= w
@@ -76,5 +81,17 @@ window[𝚘𝚗].resize = debounce(300, ()=> {
 	// TODO resize each before drawing to it
 	G.GU.F= 0
 	tA.R(i, j)
-	tB.R(i, j) })
+	tB.R(i, j) }
 
+const socials = [
+  'https://stackoverflow.com/users/741981/cvsguimaraes',
+  'https://github.com/kbtz',
+  'https://wakatime.com/@kbtz'
+]
+
+window[𝚘𝚗].click = () => {
+  if (hover) {
+    let url = socials[Math.floor(Math.random() * 2.99)]
+    window.open(url,'_blank');
+  }
+}

@@ -63,7 +63,7 @@ vec4 update(vec2 p) {
 	// logo hover
 	if(inside() && l.r > .2) {
 		t.a -= .05 * N21(P * T) * (1. - mouse/GL);
-		t.a = max(t.a, .66 + t.b/3.);
+		t.a = max(t.a, .33 + t.b/3.);
 	} else if(T > 10.)
 		t.a += .002 + mouse/GL/50.;
 	else
@@ -118,8 +118,8 @@ void main() {
 	c /= 2.;
 	
 	vec3 g = vec3(c);
-	g.g*=1.2;
-	g.rb/=1.6;
+	//g.g*=1.2;
+	//g.rb/=1.6;
 	gl_FragColor = vec4(g, t.a);
 	
 	if(P.x < 1. && P.y < 1.)
